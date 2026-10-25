@@ -760,7 +760,21 @@ function heatLogo(el){
 
 /* ───────── навигация ───────── */
 let view="home";
-function go(v,data={}){
+function hashFor(v,data={}){
+  if(v==="home")return "#/";
+  if(v==="catalog"){let h="#/catalog";const c=data.col||F.col,ty=data.type||F.type;if(c&&c!=="all")h+="/col/"+c;if(ty&&ty!=="all")h+="/type/"+ty;return h}
+  if((v==="product"||v==="article")&&(data.id||cur.id))return "#/"+v+"/"+(data.id||cur.id);
+  return "#/"+v;
+}
+function parseHash(){
+  const parts=(location.hash||"").replace(/^#\/?/,"").split("/").filter(Boolean);
+  let v=parts[0]||"home";if(!V[v]||v==="ok")v="home";
+  const data={};
+  if(v==="catalog"){for(let i=1;i<parts.length;i+=2)data[parts[i]]=parts[i+1]}
+  if(v==="product"||v==="article"){data.id=parts[1];if(v==="product"&&!byId(data.id))return {v:"catalog",data:{}};if(v==="article"&&!ARTICLES.some(a=>a.id===data.id))return {v:"journal",data:{}}}
+  return {v,data};
+}
+function go(v,data={},push=true){
   if(v==="catalog")F={col:data.col||"all",type:data.type||"all",sort:"def"};
   if(data.id)cur.id=data.id;
   if(v==="product")cur.wax="olive";
@@ -768,8 +782,9 @@ function go(v,data={}){
   window.scrollTo({top:0,behavior:"instant"});
   document.querySelectorAll(".logo").forEach(heatLogo);
   if(v==="home"){slide=0;startSlides()}else clearInterval(slideTimer);
-  if(["home","catalog","journal","about","delivery","contacts","checkout"].includes(v)){try{history.replaceState(null,"","#"+v)}catch(e){}}
+  if(push){const h=hashFor(v,data);try{if(location.hash!==h)history.pushState({v},"",h)}catch(e){}}
 }
+window.addEventListener("popstate",()=>{const r=parseHash();go(r.v,r.data,false)});
 document.addEventListener("click",e=>{
   const t=e.target.closest("button,[data-go]"); if(!t)return;
   if(t.dataset.go){e.preventDefault();go(t.dataset.go,{...t.dataset});return}
@@ -779,7 +794,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.q){const s=$("#pq");s.textContent=Math.max(1,+s.textContent+ +t.dataset.q);return}
   if(t.dataset.cq){const id=t.dataset.cq;cart[id]=Math.max(0,(cart[id]||0)+ +t.dataset.d);if(!cart[id])delete cart[id];save();renderCart();return}
   if(t.dataset.rm){delete cart[t.dataset.rm];save();renderCart();return}
-  if(t.dataset.f){F[t.dataset.f]=t.dataset.v;$("#app").innerHTML=V.catalog();document.querySelectorAll(".logo").forEach(heatLogo);return}
+  if(t.dataset.f){F[t.dataset.f]=t.dataset.v;try{history.replaceState({v:"catalog"},"",hashFor("catalog",{}))}catch(e){}$("#app").innerHTML=V.catalog();document.querySelectorAll(".logo").forEach(heatLogo);return}
   if(t.dataset.slide){showSlide(+t.dataset.slide);startSlides();return}
   if(t.id==="next"){showSlide(slide+1);startSlides();return}
   if(t.hasAttribute("data-copy")){copyMail();return}
@@ -835,8 +850,7 @@ $("#mq").innerHTML=[...MQ,...MQ].map(t=>`<span>${t}</span>`).join("");
 })();
 
 renderCart();
-const h=(location.hash||"").slice(1);
-go(V[h]&&!["product","article","ok"].includes(h)?h:"home");
+{const r=parseHash();go(r.v,r.data,false);try{history.replaceState({v:r.v},"",hashFor(r.v,r.data))}catch(e){}}
 </script>
 
 </body>
