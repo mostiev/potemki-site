@@ -321,6 +321,64 @@ details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
 .prose-sm{max-width:62ch}
 .prose-sm p+p{margin-top:1em}
 
+
+/* ── телефон ── */
+@media (max-width:759px){
+  body{font-size:16px}
+  .marquee__track{font-size:17px;gap:64px;padding-left:64px}
+  .head{padding-top:20px;min-height:60px}
+  .logo{width:min(46vw,190px)}
+  .pills{top:calc(env(safe-area-inset-top,0px) + var(--mq) + 14px);gap:6px}
+  .pill{height:36px;padding:0 14px 2px;font-size:15px}
+  .label{font-size:15px;padding-block:16px 14px;white-space:nowrap}
+  .label .more{font-size:15px}
+  /* слайдер */
+  .hero{padding-bottom:36px}
+  .slide__img{width:min(62vw,250px);margin-top:16px}
+  .counter{position:static;order:2;justify-content:center;font-size:18px;margin-top:14px;gap:12px}
+  .hero{display:flex;flex-direction:column;align-items:center}
+  .slides{order:1}
+  .dots{order:3;margin-top:10px}
+  .slide__title{font-size:clamp(34px,10.5vw,46px);margin-top:20px}
+  .slide__btn{margin-top:14px}
+  .slide__meta{font-size:16px;margin-top:14px;padding-inline:8px}
+  .big{margin-block:28px 4px;font-size:clamp(36px,11vw,52px)}
+  /* ячейки */
+  .cell__title{font-size:18px}
+  .cell__meta{font-size:15px}
+  .cell__media{width:min(170px,52%);margin:28px auto 24px}
+  .cells--p .cell{padding:14px 12px 0}
+  .cells--p .cell:nth-child(odd){padding-left:var(--pl)}
+  .cells--p .cell:nth-child(even){padding-right:var(--pr)}
+  .cells--p .cell__title{font-size:16px;text-wrap:balance}
+  .cells--p .cell__buy{flex-direction:column;align-items:flex-start;gap:8px}
+  .cells--p .cell__buy .pill{height:32px;font-size:14px}
+  .cells--p .cell__media{width:86%;margin:20px auto 16px}
+  .tagline{position:static;margin-top:6px}
+  /* каталог */
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(var(--pl)*-1) calc(var(--pr)*-1);padding:8px var(--pr) 18px var(--pl)}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{height:36px;padding:0 14px 2px;font-size:15px;flex:none}
+  .toolbar{padding-block:8px 12px}
+  .display{font-size:clamp(36px,11vw,48px)}
+  /* разделы */
+  .feature{padding-block:28px 48px;gap:24px}
+  .feature__img{width:min(240px,64%)}
+  .feature__title{font-size:30px}
+  .fire{padding-block:36px}
+  .fire__box{padding:22px 18px}
+  .tiles{gap:10px;padding-block:28px 44px}
+  .tile{min-height:96px;font-size:16px}
+  .foot{gap:22px;padding-block:32px 22px;font-size:16px}
+  .pdp{gap:22px}
+  .pdp__media{padding-block:28px}
+  .pdp__media>*{width:min(300px,74%)}
+  .pdp__title{font-size:34px}
+  .menu__grid{gap:26px;padding-top:20px}
+  .menu__grid button{font-size:22px}
+  .article .prose{font-size:18px}
+  .row__img{width:96px}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -427,13 +485,13 @@ const TYPES={table:"Столовые",pillar:"Столбики",aroma:"Аром�
 const MONTH="laur";
 const CLEAN="Чистый состав: свеча не коптит, не пахнет и не искажает вкус вина и еды, поэтому подходит для сервировки. Красиво плавится и долго горит. Иногда «всплакнет» — это след ручной заливки воска в формы.";
 const P=[
- {id:"t20",name:"Столовая свеча 20 см",col:"main",type:"table",price:350,img:"taper-single",
+ {id:"t20",name:"Столовая свеча 20 см",col:"main",type:"table",price:350,img:"taper-single",
   mat:"Оливковый воск, хлопковый фитиль, поталь",size:"Высота 20 см",
   lead:"Простая столовая свеча классической цилиндрической формы. Промышленная точность формы и теплые доиндустриальные материалы.",desc:CLEAN},
- {id:"t25",name:"Столовая свеча 25 см",col:"main",type:"table",price:450,img:"taper-pair",
+ {id:"t25",name:"Столовая свеча 25 см",col:"main",type:"table",price:450,img:"taper-pair",
   mat:"Оливковый воск, хлопковый фитиль, поталь",size:"Высота 25 см",
   lead:"Та же форма, но выше: для длинного ужина и высоких подсвечников.",desc:CLEAN},
- {id:"p512",name:"Свеча-столбик 5×12 см",col:"main",type:"pillar",price:1500,img:"pillar",
+ {id:"p512",name:"Свеча-столбик 5×12 см",col:"main",type:"pillar",price:1500,img:"pillar",
   mat:"Оливковый воск, хлопковый фитиль, поталь",size:"Диаметр 5 см, высота 12 см",
   lead:"Устойчивая свеча без подсвечника: на полку, подоконник или в центр стола.",desc:CLEAN},
  {id:"laur",name:"Аромасвеча «Лавр и пламя»",col:"main",type:"aroma",price:4500,img:"aroma",
@@ -493,7 +551,7 @@ function media(p){
   if(p.img) return `<img src="${IMG[p.img]}" alt="${p.name}" loading="lazy">`;
   return `<div class="ph">${p.col==="collab"?STAMP:STACK}</div>`;
 }
-const label=(t,more)=>`<div class="label">${t}${more?`<button class="bare tl ul more" ${more}>Смотреть все</button>`:''}</div>`;
+const label=(t,more)=>`<div class="label">${t}${more?`<button class="bare tl ul more" ${more}><span class="hide-sm">Смотреть все</span><span class="show-sm">Все</span></button>`:''}</div>`;
 function pcell(p){
   return `<article class="cell">
     <button class="bare tl cell__title" data-go="product" data-id="${p.id}">${p.name}</button>
