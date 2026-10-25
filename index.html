@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap">
 <style>
+:root{color-scheme:light}
 /* Layout: музейный белый лист как у MoMu — бегущая строка с «пламенной» тенью, большой логотип,
    фиксированные кнопки-таблетки справа, черные линии во всю ширину, ячейки с маленькими квадратными фото */
 :root{
@@ -31,14 +32,6 @@
   --mq:46px;
 }
 @media (min-width:900px){:root{--pl:max(40px,env(safe-area-inset-left,0px));--pr:max(40px,env(safe-area-inset-right,0px));--mq:50px}}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0d0a08; --fg:#f3ede5; --muted:#a59b91; --line:#f3ede5; --soft:#3a332e; --tile:#1a1613;
-  --pill:#1d1815; --pill-fg:#f3ede5; --red:#ff3b2b; --orange:#ff8f2e;
-  --sh:8px 10px 37px rgba(0,0,0,.7); --ok:#6fc694; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0d0a08; --fg:#f3ede5; --muted:#a59b91; --line:#f3ede5; --soft:#3a332e; --tile:#1a1613;
-  --pill:#1d1815; --pill-fg:#f3ede5; --red:#ff3b2b; --orange:#ff8f2e;
-  --sh:8px 10px 37px rgba(0,0,0,.7); --ok:#6fc694; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:18px;line-height:1.4;-webkit-font-smoothing:antialiased;overflow-x:hidden}
