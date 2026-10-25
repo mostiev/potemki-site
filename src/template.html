@@ -1,0 +1,838 @@
+<title>Потемки</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap">
+<style>
+/* Layout: музейный белый лист как у MoMu — бегущая строка с «пламенной» тенью, большой логотип,
+   фиксированные кнопки-таблетки справа, черные линии во всю ширину, ячейки с маленькими квадратными фото */
+:root{
+  --bg:#ffffff; --fg:#000000; --muted:#5f5953; --line:#000000; --soft:#d9d4cf; --tile:#f4f2ef;
+  --pill:#ffffff; --pill-fg:#000000;
+  --red:#e32118; --orange:#ff7a1c;
+  --flame:linear-gradient(90deg,var(--red),var(--orange));
+  --sh:8px 10px 37px rgba(0,0,0,.2);
+  --sh-hot:8px 10px 37px rgba(227,33,24,.45),-6px 8px 30px rgba(255,122,28,.35);
+  --glow:0 0 18px rgba(255,122,28,.55),6px 8px 26px rgba(227,33,24,.35);
+  --ok:#2f7d4f;
+  --soft-flame:linear-gradient(90deg,rgba(227,33,24,.30),rgba(255,122,28,.34));
+  --soft-glow:0 0 12px 2px rgba(255,110,40,.32);
+  --sans:"Onest","Gill Sans","Helvetica Neue",Arial,sans-serif;
+  --serif:"Spectral","Iowan Old Style",Georgia,"Times New Roman",serif;
+  --pl:max(16px,env(safe-area-inset-left,0px));
+  --pr:max(16px,env(safe-area-inset-right,0px));
+  --mq:46px;
+}
+@media (min-width:900px){:root{--pl:max(40px,env(safe-area-inset-left,0px));--pr:max(40px,env(safe-area-inset-right,0px));--mq:50px}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d0a08; --fg:#f3ede5; --muted:#a59b91; --line:#f3ede5; --soft:#3a332e; --tile:#1a1613;
+  --pill:#1d1815; --pill-fg:#f3ede5; --red:#ff3b2b; --orange:#ff8f2e;
+  --sh:8px 10px 37px rgba(0,0,0,.7); --ok:#6fc694; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d0a08; --fg:#f3ede5; --muted:#a59b91; --line:#f3ede5; --soft:#3a332e; --tile:#1a1613;
+  --pill:#1d1815; --pill-fg:#f3ede5; --red:#ff3b2b; --orange:#ff8f2e;
+  --sh:8px 10px 37px rgba(0,0,0,.7); --ok:#6fc694; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:18px;line-height:1.4;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:90;background:var(--bg)}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.wrap{padding-left:var(--pl);padding-right:var(--pr)}
+.bleed{margin-left:calc(var(--pl)*-1);margin-right:calc(var(--pr)*-1)}
+h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
+p{margin:0}
+
+/* ── бегущая строка ── */
+.marquee{position:sticky;top:env(safe-area-inset-top,0px);z-index:70;height:var(--mq);background:var(--bg);display:flex;align-items:center;white-space:nowrap}
+.marquee::after{content:"";position:absolute;left:0;right:0;top:calc(100% - 6px);height:16px;background:var(--flame);filter:blur(10px);opacity:.75;z-index:-1;pointer-events:none}
+.marquee__clip{overflow:hidden;width:100%;height:100%;display:flex;align-items:center;background:var(--bg)}
+.marquee__track{display:inline-flex;gap:100px;padding-left:100px;animation:run 76s linear infinite;font-size:clamp(19px,1.9vw,25px)}
+.marquee__track span{background:var(--flame);-webkit-background-clip:text;background-clip:text;color:transparent}
+.marquee:hover .marquee__track{animation-play-state:paused}
+@keyframes run{to{transform:translateX(-50%)}}
+
+/* ── шапка ── */
+.head{padding-top:30px;display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2;pointer-events:none}
+.head .logo{pointer-events:auto}
+.logo{display:block;width:clamp(150px,30vw,420px);color:var(--fg);background:none;border:0;padding:0}
+.logo svg{display:block;width:100%;height:auto}
+.pills{position:fixed;z-index:75;top:calc(env(safe-area-inset-top,0px) + var(--mq) + 22px);right:var(--pr);display:flex;gap:8px}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 20px 2px;border-radius:999px;border:0;background:var(--pill);color:var(--pill-fg);
+  box-shadow:var(--sh);font-size:17px;white-space:nowrap;transition:box-shadow .35s,color .35s,background-color .35s}
+.pill:hover{box-shadow:var(--sh-hot)}
+.pill--hot{color:var(--red);box-shadow:var(--sh-hot)}
+.pill--dark{background:var(--fg);color:var(--bg)}
+.pill .count{min-width:24px;height:24px;border-radius:12px;color:var(--fg);font-size:13px;display:inline-grid;place-items:center;padding:0 7px;font-variant-numeric:tabular-nums}
+.pill svg{width:18px;height:18px}
+.hide-sm{display:none!important}
+@media (min-width:760px){.hide-sm{display:inline-flex!important}.show-sm{display:none!important}}
+
+/* ── ссылки со светом ── */
+.tl{text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:2px;text-underline-offset:.18em;transition:text-decoration-color .3s}
+.tl:hover,.tl:focus-visible,.row:hover .tl{text-decoration-color:var(--red)}
+.ul .tl,.tl.ul,.tl.ul-fg,.cell__title.tl{text-decoration:none}
+.tl.ul-fg:hover{background-image:linear-gradient(var(--red),var(--red));background-size:100% 2px}
+.ul{background:linear-gradient(90deg,var(--red),var(--orange)) 0 100%/100% 2px no-repeat;padding-bottom:1px}
+.ul-fg{background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:1px}
+.bare{background:none;border:0;padding:0;text-align:inherit}
+
+/* ── раздел ── */
+.label{display:flex;align-items:center;gap:10px;font-size:17px;text-transform:uppercase;letter-spacing:.01em;padding-block:20px 18px}
+.label::before{content:"";width:15px;height:15px;border-radius:50%;background:currentColor;flex:none}
+.label .more{margin-left:auto;text-transform:none}
+.line-t{border-top:1px solid var(--line)}
+.line-b{border-bottom:1px solid var(--line)}
+.muted{color:var(--muted)}
+.serif{font-family:var(--serif);font-weight:300}
+.display{font-size:clamp(42px,7.6vw,112px);line-height:1;letter-spacing:-.02em}
+.h2{font-size:clamp(30px,4.4vw,60px);line-height:1.05;letter-spacing:-.015em}
+.h3{font-size:clamp(22px,2.2vw,28px);line-height:1.15}
+.small{font-size:15px}
+.badge{display:inline-block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px 4px;border-radius:999px;border:1px solid currentColor;vertical-align:middle}
+.badge--demo{color:var(--orange)}
+.badge--soon{color:var(--fg);border-color:transparent;font-size:13px;padding:4px 12px 5px}
+.lit{position:relative;background:var(--bg);border:1.5px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(90deg,var(--red),var(--orange)) border-box;
+  animation:lit 2.8s ease-in-out infinite alternate}
+@keyframes lit{from{box-shadow:0 0 4px 0 rgba(255,110,40,.18)}to{box-shadow:0 0 14px 3px rgba(255,110,40,.5),4px 6px 18px rgba(227,33,24,.25)}}
+
+/* ── герой-слайдер ── */
+.hero{position:relative;display:grid;justify-items:center;text-align:center;padding-bottom:56px;margin-top:0}
+.slides{display:grid;width:100%}
+.slide{grid-area:1/1;display:grid;justify-items:center;gap:0;opacity:0;visibility:hidden;transition:opacity .7s,visibility .7s}
+.slide.on{opacity:1;visibility:visible}
+.slide__img{width:clamp(210px,24vw,360px);aspect-ratio:3/4;object-fit:cover;max-width:100%;margin-top:28px}
+.slide__title{font-family:var(--serif);font-weight:300;font-size:clamp(44px,8vw,120px);line-height:.98;letter-spacing:-.02em;margin-top:28px;max-width:16ch}
+.slide__btn{margin-top:-14px;position:relative}
+.slide__meta{max-width:44ch;margin-top:22px;font-size:clamp(18px,1.8vw,24px);line-height:1.3}
+.counter{position:absolute;right:0;top:28px;line-height:1;display:flex;align-items:center;gap:10px;font-size:clamp(22px,2vw,30px);font-variant-numeric:tabular-nums}
+.counter button{font-size:inherit;transition:color .3s,text-shadow .3s}
+.dots{display:flex;gap:8px;margin-top:26px}
+.dots button{width:9px;height:9px;border-radius:50%;border:1px solid var(--fg);background:transparent;padding:0}
+.dots button[aria-current="true"]{background:var(--flame);border-color:transparent}
+
+/* ── свеча месяца ── */
+.big{display:block;width:100%;margin-block:40px 8px;border:0;border-radius:999px;background:var(--pill);color:var(--pill-fg);box-shadow:var(--sh);
+  font-size:clamp(46px,10.5vw,150px);line-height:1.05;letter-spacing:-.02em;padding:.16em .3em .22em;transition:color .4s,box-shadow .4s}
+.big:hover{box-shadow:var(--sh-hot)}
+.big small{display:block;font-size:clamp(15px,1.4vw,19px);letter-spacing:0;color:var(--muted);margin-top:4px}
+
+/* ── ячейки (как Other upcoming activities) ── */
+.cells{display:grid;grid-template-columns:1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cells--3{}
+@media (min-width:760px){.cells--3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.cells--p{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:760px){.cells--p{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.cell{display:flex;flex-direction:column;min-width:0;padding:18px var(--pr) 0 var(--pl);border-bottom:1px solid var(--line);position:relative}
+.cells--p .cell{padding:16px 16px 0}
+@media (min-width:760px){
+  .cells--3 .cell,.cells--p .cell{padding:18px 26px 0;border-bottom:0;border-right:1px solid var(--line)}
+  .cells--3 .cell:nth-child(3n),.cells--p .cell:nth-child(3n){border-right:0}
+  .cells--p .cell:nth-child(n+4){border-top:1px solid var(--line)}
+  .cells--3 .cell:first-child,.cells--p .cell:nth-child(3n+1){padding-left:var(--pl)}
+}
+@media (max-width:759px){
+  .cells--3 .cell:last-child{border-bottom:0}
+  .cells--p .cell:nth-child(odd){border-right:1px solid var(--line);padding-left:var(--pl)}
+  .cells--p .cell:nth-child(even){padding-right:var(--pr)}
+  .cells--p .cell:nth-last-child(-n+2):nth-child(odd),.cells--p .cell:last-child{border-bottom:0}
+}
+.cell__title{font-size:clamp(19px,1.7vw,24px);line-height:1.25;align-self:flex-start;text-align:left;background:linear-gradient(var(--fg),var(--fg)) 0 100%/100% 1px no-repeat;padding-bottom:2px}
+.cell{transition:color .3s}
+.cell:hover{color:var(--red)}
+.cell:hover .muted{color:var(--red)}
+.cell:hover .cell__media{box-shadow:var(--sh-hot);transform:translateY(-2px)}
+.cell:hover .cell__title,.cell__title:focus-visible{background-image:linear-gradient(var(--red),var(--red));background-size:100% 2px}
+.cell__meta{font-size:clamp(16px,1.5vw,21px);line-height:1.3}
+.cell__media{display:block;width:min(200px,46%);aspect-ratio:1;margin:clamp(48px,7vw,104px) auto clamp(36px,4.5vw,64px);overflow:hidden;background:var(--tile);border:0;padding:0;transition:box-shadow .45s,transform .45s}
+.cells--p .cell__media{width:min(190px,62%)}
+.cell__media img{width:100%;height:100%;object-fit:cover;display:block}
+
+.cell__buy{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:6px}
+.cell__buy .pill{height:34px;padding:0 14px 2px;font-size:15px}
+.price{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tagline{position:absolute;right:16px;top:18px}
+@media (max-width:759px){.cells--p .tagline{position:static;margin-top:6px}}
+
+/* заглушка без фото */
+.ph{width:100%;height:100%;display:grid;place-items:center;position:relative;background:
+  radial-gradient(55% 45% at 50% 42%,color-mix(in srgb,var(--orange) 60%,transparent),transparent 72%),
+  radial-gradient(26% 22% at 50% 40%,color-mix(in srgb,#fff 75%,var(--orange)),transparent 70%),var(--tile)}
+.ph svg{width:46%;color:var(--fg);opacity:.9}
+
+/* ── журнал: черный, как Magazine ── */
+.inv{background:var(--fg);color:var(--bg);--line:var(--bg);--muted:color-mix(in srgb,var(--bg) 70%,var(--fg))}
+.inv .label{border-bottom:1px solid var(--bg)}
+.feature{display:grid;gap:32px;align-items:center;padding-block:48px 72px}
+@media (min-width:900px){.feature{grid-template-columns:1fr 1fr;padding-block:64px 96px}}
+.feature__img{width:min(300px,70%);aspect-ratio:3/4;object-fit:cover;justify-self:center}
+.feature__text{display:grid;gap:16px;justify-items:center;text-align:center;max-width:30ch;justify-self:center}
+.feature__title{font-family:var(--serif);font-weight:300;font-size:clamp(32px,3.4vw,46px);line-height:1.1}
+.feature__title a,.feature__title button{background:linear-gradient(currentColor,currentColor) 0 92%/100% 1px no-repeat}
+.feature__more{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding-bottom:40px}
+.inv .pill{background:var(--fg);color:var(--bg);border:1px solid var(--bg);box-shadow:8px 10px 37px rgba(255,255,255,.18)}
+.inv .pill:hover{box-shadow:8px 10px 37px rgba(255,122,28,.55)}
+
+/* ── о заводике ── */
+.stamp{width:min(280px,64%);color:var(--fg);justify-self:center}
+.stamp svg{width:100%;height:auto;display:block;animation:spin 70s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── огоньки + подписка ── */
+.fire{position:relative;min-height:clamp(340px,40vw,440px);padding-block:48px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(180deg,#2a2a2c 0%,#454547 50%,#6a6a6d 100%);color:#fff}
+.fire canvas{position:absolute;inset:0;width:100%;height:100%}
+.fl{transform-box:fill-box;transform-origin:50% 100%;animation:flick 2.4s ease-in-out infinite alternate}
+@keyframes flick{0%{transform:scale(1,1) rotate(-2deg)}25%{transform:scale(.94,1.08) rotate(2deg)}50%{transform:scale(1.04,.94) rotate(-1deg)}75%{transform:scale(.97,1.1) rotate(2.5deg)}100%{transform:scale(1,1) rotate(-2.5deg)}}
+.halo{transform-box:fill-box;transform-origin:center;animation:halo 2.6s ease-in-out infinite alternate}
+@keyframes halo{from{opacity:.4;transform:scale(.9)}to{opacity:.8;transform:scale(1.1)}}
+.fire__in{position:relative;display:grid;justify-items:center;gap:28px;width:100%}
+.emblem{display:grid;justify-items:center;padding:18px 40px 8px}
+.emblem .oval{width:clamp(96px,9vw,136px);height:auto;color:#fff;overflow:visible}
+.emblem .fire__title{margin-top:14px;text-transform:uppercase;letter-spacing:.34em;padding-left:.34em;font-size:clamp(17px,1.8vw,24px);color:#fff}
+.fire__box{position:relative;display:grid;gap:14px;justify-items:center;text-align:center;padding:28px clamp(18px,3vw,36px);background:rgba(28,28,30,.8);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 0 0 1px rgba(255,255,255,.18),8px 10px 37px rgba(0,0,20,.45);max-width:min(620px,calc(100% - 32px))}
+.fire__muted{color:rgba(255,255,255,.72)}
+.fire .input{height:42px;border-radius:999px;padding:0 20px 2px;background:#fff;color:#000;box-shadow:8px 10px 37px rgba(0,0,0,.35)}
+.fire .pill{background:#fff;color:#000;box-shadow:8px 10px 37px rgba(0,0,0,.5)}
+.fire .pill:hover{box-shadow:8px 10px 37px rgba(255,122,28,.6)}
+.field{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%}
+.input{flex:1 1 220px;min-width:0;height:46px;border:0;background:var(--tile);padding:0 16px;box-shadow:inset 1px 2px 30px rgba(0,0,0,.08)}
+
+/* ── плитки ── */
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding-block:40px 64px}
+@media (min-width:760px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}}
+.tile{min-height:clamp(110px,13vw,175px);display:grid;place-items:center;text-align:center;padding:16px;background:var(--pill);color:var(--pill-fg);border:0;box-shadow:var(--sh);font-size:clamp(17px,1.5vw,21px);transition:color .35s,box-shadow .35s}
+.tile:hover{color:var(--red);box-shadow:var(--sh-hot)}
+.tile--blink{animation:blink 1s infinite}
+.tile--blink:hover{animation-play-state:paused}
+@keyframes blink{0%,50%{color:var(--red);box-shadow:var(--sh-hot)}51%,100%{color:var(--pill-fg);box-shadow:var(--sh)}}
+
+/* ── подвал ── */
+.foot{display:grid;gap:28px;padding-block:44px 28px;border-top:1px solid var(--line);font-size:17px}
+@media (min-width:800px){.foot{grid-template-columns:1.4fr 1fr 1fr 1fr}}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;justify-items:start}
+.foot h4{margin:0 0 10px;font-weight:400;font-size:17px}
+.foot__logo{width:min(100%,260px);color:var(--fg)}
+.foot__logo svg{width:100%;height:auto;display:block}
+.copy{padding-block:0 32px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ── меню ── */
+.menu{position:fixed;inset:0;z-index:85;background:var(--bg);overflow:auto;padding-top:calc(env(safe-area-inset-top,0px) + 22px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 40px)}
+.menu__grid{display:grid;gap:36px;padding-top:28px}
+@media (min-width:800px){.menu__grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.menu__grid h4{margin:0 0 14px;font-weight:400;font-size:17px;display:flex;gap:10px;align-items:center;text-transform:uppercase}
+.menu__grid h4::before{content:"";width:13px;height:13px;border-radius:50%;background:currentColor}
+.menu__grid ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;justify-items:start}
+.menu__grid button{font-size:clamp(24px,2.4vw,32px);line-height:1.2;text-align:left}
+
+/* ── корзина ── */
+.scrim{position:fixed;inset:0;z-index:95;background:rgba(10,8,6,.3);opacity:0;transition:opacity .25s}
+.scrim.on{opacity:1}
+.drawer{position:fixed;z-index:96;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--bg);box-shadow:-8px 0 40px rgba(0,0,0,.18);display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  padding-top:calc(env(safe-area-inset-top,0px) + 18px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 18px);padding-left:20px;padding-right:max(20px,env(safe-area-inset-right,0px))}
+.drawer.on{transform:none}
+.drawer__head{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.drawer__list{flex:1;overflow:auto;display:grid;align-content:start}
+.ln{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:14px;padding-block:16px;border-bottom:1px solid var(--line);align-items:start}
+.ln img,.ln .ph{width:72px;height:72px;object-fit:cover}
+.ln__name{font-family:var(--serif);font-weight:300;font-size:20px;line-height:1.15}
+.qty{display:inline-flex;align-items:center;border-radius:999px;height:34px;margin-top:8px;box-shadow:var(--sh);background:var(--pill)}
+.qty button{width:34px;height:34px;border:0;background:none;font-size:18px}
+.qty span{min-width:24px;text-align:center;font-variant-numeric:tabular-nums}
+.rm{color:var(--muted);font-size:14px;margin-top:8px}
+.sum{display:grid;gap:8px;padding-top:16px;font-variant-numeric:tabular-nums}
+.sum div{display:flex;justify-content:space-between}
+.sum .total{font-size:22px;padding-top:6px}
+.progress{height:4px;background:var(--soft);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--flame)}
+.btn-wide{width:100%;height:52px;font-size:18px;margin-top:14px}
+.empty{padding:48px 0;display:grid;gap:18px;justify-items:start}
+
+/* ── внутренние страницы ── */
+.page{padding-top:20px}
+.crumbs{display:flex;gap:8px;flex-wrap:wrap;font-size:15px;color:var(--muted);padding-block:24px 6px}
+.crumbs button{color:inherit}
+.pdp{display:grid;gap:32px;padding-block:20px 40px}
+@media (min-width:900px){.pdp{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px}}
+.pdp__media{display:grid;place-items:center;padding-block:clamp(40px,8vw,120px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pdp__media>*{width:min(420px,80%);aspect-ratio:1;object-fit:cover}
+.pdp__info{display:grid;gap:18px;align-content:start}
+@media (min-width:900px){.pdp__info{position:sticky;top:130px}}
+.pdp__title{font-family:var(--serif);font-weight:300;font-size:clamp(36px,4.2vw,60px);line-height:1.02}
+.pdp__price{font-size:28px;font-variant-numeric:tabular-nums}
+.wax{display:grid;gap:8px}
+.wax__label{color:var(--muted);font-size:16px}
+.buy{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.buy .qty{margin-top:0;height:44px}
+.buy .qty button{height:44px;width:42px}
+.buy .pill{height:44px;padding:0 28px 2px}
+.facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 20px;font-size:16px;margin:0}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0}
+details{border-top:1px solid var(--line)}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding-block:16px;display:flex;justify-content:space-between;transition:color .3s,text-shadow .3s}
+summary:hover{text-decoration:underline 2px var(--red);text-underline-offset:.18em}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;padding-block:6px}
+.chip{height:38px;padding:0 18px 2px;border-radius:999px;border:0;background:var(--pill);box-shadow:var(--sh);font-size:16px;white-space:nowrap;transition:box-shadow .35s,color .35s}
+.chip:hover{box-shadow:var(--sh-hot)}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.chip sup{font-size:11px;margin-left:3px;opacity:.7}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:22px 14px}
+.select{height:38px;border-radius:999px;border:0;background:var(--pill);box-shadow:var(--sh);padding:0 14px}
+.checkout{display:grid;gap:40px;padding-block:24px 72px}
+@media (min-width:900px){.checkout{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:64px}}
+.form{display:grid;gap:24px}
+.form fieldset{border:0;padding:0;margin:0;display:grid;gap:12px}
+.form legend{display:flex;align-items:center;gap:10px;font-size:16px;text-transform:uppercase;padding:0 0 6px}
+.form legend::before{content:"";width:12px;height:12px;border-radius:50%;background:currentColor}
+.form .lbl{display:grid;gap:6px;font-size:15px}
+.form .input{height:50px}
+.form textarea{min-height:96px;padding:14px 16px;border:0;background:var(--tile);resize:vertical;box-shadow:inset 1px 2px 30px rgba(0,0,0,.08)}
+.two{display:grid;gap:12px}
+@media (min-width:600px){.two{grid-template-columns:1fr 1fr}}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:var(--pill);box-shadow:var(--sh);cursor:pointer;transition:box-shadow .35s}
+.opt:has(input:checked){box-shadow:var(--sh-hot)}
+.opt input{margin-top:5px;accent-color:var(--red)}
+.opt b{font-weight:500}
+.err{color:var(--red);font-size:15px}
+.summary{border-top:1px solid var(--line);padding-top:16px;display:grid;gap:4px;align-content:start}
+@media (min-width:900px){.summary{position:sticky;top:130px}}
+.note{font-size:14px;color:var(--muted)}
+.article{display:grid;gap:28px;padding-block:20px 40px;justify-items:center;text-align:center}
+.article__img{width:clamp(220px,26vw,360px);aspect-ratio:3/4;object-fit:cover}
+.article .prose{font-family:var(--serif);font-weight:300;font-size:clamp(19px,1.6vw,22px);line-height:1.55;max-width:62ch;text-align:left}
+.article .prose p+p{margin-top:1em}
+.rows .row{display:grid;gap:12px;padding-block:22px;border-bottom:1px solid var(--line);width:100%;text-align:left}
+@media (min-width:800px){.rows .row{grid-template-columns:200px minmax(0,1fr) 180px;align-items:center;gap:36px}}
+.row__img{width:120px;aspect-ratio:1;object-fit:cover}
+@media (min-width:800px){.row__img{width:200px}}
+.row__title{font-size:clamp(22px,2.3vw,32px);line-height:1.15}
+.ok{display:grid;gap:20px;justify-items:center;text-align:center;padding-block:72px}
+.toast{position:fixed;z-index:99;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);transform:translate(-50%,20px);opacity:0;transition:.25s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.prose-sm{max-width:62ch}
+.prose-sm p+p{margin-top:1em}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="marquee" aria-label="Объявления"><div class="marquee__clip"><div class="marquee__track" id="mq"></div></div></div>
+
+<div class="pills">
+  <button class="pill hide-sm" data-go="catalog">Магазин</button>
+  <button class="pill hide-sm" data-go="journal">Журнал</button>
+  <button class="pill" id="cartBtn" aria-label="Корзина"><span class="hide-sm">Корзина</span><svg class="show-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="count lit" id="cartCount">0</span></button>
+  <button class="pill" id="menuBtn">Меню</button>
+</div>
+
+<main id="app" class="wrap"></main>
+
+<div class="wrap">
+  <section class="fire bleed" aria-label="Подписка">
+    <canvas id="fireCanvas" aria-hidden="true"></canvas>
+    <div class="fire__in">
+    <div class="emblem" aria-hidden="true"><svg class="oval" viewBox="-4 -4 128 168">
+      <defs><radialGradient id="bigG" cx=".5" cy=".7" r=".62"><stop offset="0" stop-color="#ffc25a"/><stop offset=".45" stop-color="#ff8a24"/><stop offset="1" stop-color="#d42a1c"/></radialGradient>
+      <radialGradient id="haloG"><stop offset="0" stop-color="#ff8a2a" stop-opacity=".55"/><stop offset="1" stop-color="#ff5a1e" stop-opacity="0"/></radialGradient></defs>
+      <ellipse class="halo" cx="60" cy="96" rx="40" ry="46" fill="url(#haloG)"/>
+      <path d="M42.8 11.5C44.2 11.1 48.3 9.3 51.1 8.7C53.9 8.1 56.8 8.0 59.6 8.2C62.5 8.4 65.3 9.0 68.1 9.9C70.9 10.8 73.7 12.1 76.3 13.7C78.9 15.3 81.5 17.3 83.9 19.5C86.4 21.7 88.7 24.2 90.9 26.9C93.0 29.6 95.1 32.6 97.0 35.7C98.9 38.9 100.6 42.3 102.2 45.8C103.8 49.3 105.2 53.1 106.3 56.9C107.5 60.8 108.5 64.8 109.2 68.9C109.9 73.0 110.5 77.2 110.7 81.4C110.9 85.7 110.8 90.0 110.5 94.2C110.1 98.4 109.5 102.7 108.6 106.7C107.7 110.7 106.4 114.6 104.9 118.3C103.5 121.9 101.7 125.4 99.7 128.5C97.8 131.6 95.6 134.5 93.2 136.9C90.9 139.4 88.3 141.6 85.7 143.4C83.1 145.2 80.3 146.6 77.6 147.7C74.8 148.8 71.9 149.6 69.0 150.0C66.2 150.5 63.2 150.6 60.3 150.4C57.5 150.2 54.6 149.7 51.7 148.9C48.8 148.1 46.0 147.0 43.2 145.7C40.5 144.3 37.8 142.6 35.2 140.6C32.6 138.6 30.0 136.3 27.7 133.7C25.3 131.1 23.1 128.2 21.1 125.1C19.0 122.0 17.2 118.5 15.6 114.9C14.0 111.3 12.6 107.4 11.5 103.5C10.4 99.5 9.6 95.4 9.0 91.2C8.5 87.1 8.2 82.8 8.2 78.6C8.2 74.3 8.5 70.1 9.0 65.9C9.6 61.8 10.4 57.7 11.5 53.8C12.5 49.9 13.9 46.1 15.4 42.5C16.9 38.9 18.7 35.5 20.7 32.3C22.6 29.2 24.8 26.2 27.1 23.6C29.5 20.9 32.0 18.6 34.6 16.6C37.3 14.6 40.1 12.9 42.9 11.5C45.8 10.2 48.8 9.3 51.8 8.7C54.7 8.1 59.3 8.3 60.8 8.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path class="fl" style="animation-duration:2.4s" d="M60 132C33 129 27 100 39 78 49 60 59 50 63 24 71 44 93 64 93 96 93 118 81 132 60 132Z" fill="url(#bigG)"/>
+    </svg><p class="fire__title">Потемки в огне</p></div>
+    <div class="fire__box">
+      <p class="h3">Письма из Потемок</p>
+      <p class="small fire__muted">Раз в месяц: новые коллекции, статьи и даты предзаказа.</p>
+      <form class="field" id="newsForm"><input class="input" id="newsEmail" type="email" required placeholder="Ваша почта" aria-label="Ваша почта"><button class="pill" type="submit">Подписаться</button></form>
+    </div>
+    </div>
+  </section>
+  <nav class="tiles" aria-label="Быстрые ссылки">
+    <button class="tile" data-go="contacts">Контакты</button>
+    <button class="tile tile--blink" data-go="catalog" data-col="special">Специальная коллекция</button>
+    <button class="tile" data-go="delivery">Доставка и оплата</button>
+    <button class="tile" data-go="contacts">Оптовым клиентам</button>
+    <button class="tile" data-go="care">Уход за свечой</button>
+    <button class="tile" data-go="about">О заводике</button>
+  </nav>
+  <footer class="foot bleed wrap">
+    <div class="foot__logo">{{LOGO_HORIZ}}</div>
+    <div><h4>Магазин</h4><ul>
+      <li><button class="bare tl ul-fg" data-go="catalog" data-col="main">Основная коллекция</button></li>
+      <li><button class="bare tl ul-fg" data-go="catalog" data-col="special">Специальная коллекция</button></li>
+      <li><button class="bare tl ul-fg" data-go="catalog" data-col="collab">Коллаборации</button></li></ul></div>
+    <div><h4>Покупателям</h4><ul>
+      <li><button class="bare tl ul-fg" data-go="delivery">Доставка и оплата</button></li>
+      <li><button class="bare tl ul-fg" data-go="journal">Журнал</button></li>
+      <li><button class="bare tl ul-fg" data-go="about">О заводике</button></li></ul></div>
+    <div><h4>Связаться</h4><ul>
+      <li style="user-select:all">researchzarina@gmail.com</li>
+      <li><button class="bare tl ul" data-copy>Скопировать почту</button></li>
+      <li class="muted">Публичная оферта</li>
+      <li class="muted">Политика обработки данных</li></ul></div>
+  </footer>
+  <div class="copy"><span>© 2026 Потемки — маленький свечной заводик</span><span>Макет сайта · товары с пометкой «демо» — примеры</span></div>
+</div>
+
+<div class="menu" id="menu" hidden>
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div class="logo">{{LOGO_WORD}}</div><button class="pill" id="menuClose">Закрыть</button></div>
+    <div class="menu__grid">
+      <div><h4>Магазин</h4><ul>
+        <li><button class="bare tl" data-go="catalog" data-col="main">Основная коллекция</button></li>
+        <li><button class="bare tl" data-go="catalog" data-col="special">Специальная коллекция</button></li>
+        <li><button class="bare tl" data-go="catalog" data-col="collab">Коллаборации</button></li>
+        <li><button class="bare tl" data-go="product" data-id="laur">Свеча месяца</button></li></ul></div>
+      <div><h4>По типу</h4><ul>
+        <li><button class="bare tl" data-go="catalog" data-type="table">Столовые свечи</button></li>
+        <li><button class="bare tl" data-go="catalog" data-type="pillar">Свечи-столбики</button></li>
+        <li><button class="bare tl" data-go="catalog" data-type="aroma">Аромасвечи</button></li>
+        <li><button class="bare tl" data-go="catalog" data-type="decor">Подсвечники</button></li></ul></div>
+      <div><h4>Читать</h4><ul>
+        <li><button class="bare tl" data-go="journal">Журнал</button></li>
+        <li><button class="bare tl" data-go="article" data-id="forma">Форма свечи</button></li>
+        <li><button class="bare tl" data-go="care">Уход за свечой</button></li></ul></div>
+      <div><h4>О нас</h4><ul>
+        <li><button class="bare tl" data-go="about">О заводике</button></li>
+        <li><button class="bare tl" data-go="delivery">Доставка и оплата</button></li>
+        <li><button class="bare tl" data-go="contacts">Контакты</button></li></ul></div>
+    </div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="Корзина" hidden>
+  <div class="drawer__head"><span class="h3">Корзина</span><button class="pill" id="cartClose">Закрыть</button></div>
+  <div class="drawer__list" id="cartList"></div>
+  <div id="cartSum"></div>
+</aside>
+<div class="toast pill pill--dark" id="toast" role="status"></div>
+
+<script>
+const IMG={{IMG_JSON}};
+const STAMP=`{{LOGO_STAMP}}`;
+const STACK=`{{LOGO_STACK}}`;
+const WORD=`{{LOGO_WORD}}`;
+
+const COLS={main:"Основная коллекция",special:"Специальная коллекция",collab:"Коллаборации"};
+const TYPES={table:"Столовые",pillar:"Столбики",aroma:"Аромасвечи",decor:"Подсвечники"};
+const MONTH="laur";
+const CLEAN="Чистый состав: свеча не коптит, не пахнет и не искажает вкус вина и еды, поэтому подходит для сервировки. Красиво плавится и долго горит. Иногда «всплакнет» — это след ручной заливки воска в формы.";
+const P=[
+ {id:"t20",name:"Столовая свеча 20 см",col:"main",type:"table",price:350,img:"taper-single",
+  mat:"Оливковый воск, хлопковый фитиль, поталь",size:"Высота 20 см",
+  lead:"Простая столовая свеча классической цилиндрической формы. Промышленная точность формы и теплые доиндустриальные материалы.",desc:CLEAN},
+ {id:"t25",name:"Столовая свеча 25 см",col:"main",type:"table",price:450,img:"taper-pair",
+  mat:"Оливковый воск, хлопковый фитиль, поталь",size:"Высота 25 см",
+  lead:"Та же форма, но выше: для длинного ужина и высоких подсвечников.",desc:CLEAN},
+ {id:"p512",name:"Свеча-столбик 5×12 см",col:"main",type:"pillar",price:1500,img:"pillar",
+  mat:"Оливковый воск, хлопковый фитиль, поталь",size:"Диаметр 5 см, высота 12 см",
+  lead:"Устойчивая свеча без подсвечника: на полку, подоконник или в центр стола.",desc:CLEAN},
+ {id:"laur",name:"Аромасвеча «Лавр и пламя»",col:"main",type:"aroma",price:4500,img:"aroma",
+  mat:"Соевый воск, хлопковый фитиль, поталь, эфирные масла",size:"280 г",
+  notes:"Плоды лавра, лимон, герань, чайное дерево, ромашка, гвоздика, тмин",
+  lead:"Свеча в стакане с теплым смолистым ароматом из семи эфирных масел.",desc:"Аромат держится на натуральных эфирных маслах, без отдушек. Чтобы воск плавился ровно, в первый раз дайте свече гореть, пока расплавленный слой не дойдет до краев."},
+ {id:"holder",name:"Подсвечник латунный",col:"main",type:"decor",price:3200,demo:1,
+  mat:"Латунь",size:"Под свечи диаметром 2,2 см",lead:"Пример товара из раздела подсвечников.",desc:"Здесь будет описание подсвечника."},
+ {id:"snow",name:"Свеча «Первый снег»",col:"special",line:"Сезонная · Зима 26-27",type:"table",price:600,demo:1,
+  mat:"Оливковый воск, хлопковый фитиль",size:"Высота 25 см",lead:"Пример товара сезонной коллекции.",desc:"Здесь будет описание сезонной свечи."},
+ {id:"night",name:"Набор «Долгая ночь»",col:"special",line:"Сезонная · Зима 26-27",type:"table",price:2400,demo:1,
+  mat:"Оливковый воск, хлопковый фитиль",size:"6 свечей по 20 см",lead:"Пример подарочного набора к зиме.",desc:"Здесь будет описание набора."},
+ {id:"egg",name:"Свеча «Форма яйца»",col:"special",line:"Художественная",type:"pillar",price:2200,demo:1,
+  mat:"Оливковый воск, хлопковый фитиль",size:"Уточняется",lead:"Пример художественной свечи: скульптурная форма, которую хочется рассматривать.",desc:"Здесь будет описание художественной свечи."},
+ {id:"fold",name:"Свеча «Складка»",col:"special",line:"Художественная",type:"pillar",price:2800,demo:1,
+  mat:"Оливковый воск, хлопковый фитиль",size:"Уточняется",lead:"Пример художественной свечи.",desc:"Здесь будет описание."},
+ {id:"duo",name:"Совместная свеча",col:"collab",line:"Коллаборация · скоро",type:"table",price:900,demo:1,
+  mat:"Уточняется",size:"Уточняется",lead:"Пример товара из коллаборации. Здесь появится первая совместная свеча.",desc:"Здесь будет история коллаборации."}
+];
+const ARTICLES=[
+ {id:"forma",title:"Форма свечи",kind:"Эссе",read:"4 минуты",img:"taper-single",
+  lead:"Почему простая столовая свеча — архетип, и что получится, если соединить промышленную форму с теплыми материалами.",
+  body:["Свеча — вещь удивительной ясности. Ее пламени всегда достаточно, чтобы смягчить напряжение тьмы и очертить границы безопасности. Устройство свечи, как и функция, просто и совершенно, поэтому лаконичная форма кажется не выбором, а естественным воплощением и прямым продолжением самой ее сути.",
+  "К середине XIX века открытие стеарина и парафина сделало свечу доступной и массовой, а изобретение литьевой машины закрепило в качестве стандарта продолговатую цилиндрическую форму — ту самую, что сегодня называют столовой.",
+  "Именно эта форма, ставшая своего рода архетипом, была главной в быту вплоть до начала современного свечного бума, сменившего контекст, мотивации и формы. Масштабы индустрии сегодня поражают, но во всем предложенном декоративном изобилии сложно найти хорошую свечу, если помнишь о ее изначальном принципе: пламя — цель, а конструкция — средство.",
+  "Соединив лучшее от двух эпох, точную промышленную форму с теплыми, доиндустриальными материалами, я получила свечу, которую искала, — простую, живую и статичную, будто сошедшую с хрестоматийных полотен Герхарда Рихтера.",
+  "Благодаря чистому составу, она не коптит, не пахнет, не искажает вкус вина и еды, потому идеальна для сервировки. Она красиво плавится, долго горит, хотя и позволяет себе всплакнуть: это нежный и неизбежный след немашинного вливания воска в формы.",
+  "Так из ностальгии по миру зримых связей, в котором путь от материала к функции можно было проследить и повторить, родилась осуществленная возможность хоть иногда жить с этой ясностью сегодня. Ее воплощение — простая столовая свеча, в форме которой заключено чистое обещание пламени."]},
+ {id:"zazhech",title:"Зажечь свечу сегодня",kind:"Заметка",read:"1 минута",img:"flame-pair",
+  lead:"Что для вас значит зажечь свечу сегодня? Небольшое исследование истории быта.",
+  body:["Этот проект стал моим небольшим исследованием истории быта, воплощенным в осязаемой форме.",
+  "Свеча служит точкой встречи стихии огня с нашей глубинной потребностью в теплом, живом свете. Каждая — приглашение разделить размышление о простом жесте: что для вас значит зажечь свечу сегодня?",
+  "Ваш отклик станет ценным продолжением этого исследования. Напишите нам: researchzarina@gmail.com"]},
+ {id:"care",title:"Как ухаживать за свечой",kind:"Гид",read:"2 минуты",img:"pillar",
+  lead:"Пять простых правил, чтобы свеча горела ровно и долго.",
+  body:["Перед каждым зажиганием подрезайте фитиль до 5 мм: так пламя будет ровным и спокойным.",
+  "Ставьте свечу вдали от сквозняков, штор и полок над ней. Сквозняк заставляет пламя метаться, и воск плавится неровно.",
+  "Аромасвечу в первый раз оставьте гореть, пока расплавленный слой не дойдет до краев стакана. Иначе образуется «колодец», и свеча будет прогорать только в центре.",
+  "Гасите свечу колпачком или окунув фитиль в расплавленный воск и сразу выпрямив его. Так не будет дыма.",
+  "Никогда не оставляйте горящую свечу без присмотра."]}
+];
+
+const $=s=>document.querySelector(s);
+const rub=n=>n.toLocaleString("ru-RU")+" ₽";
+const FREE=3000, SHIP=450;
+let cart={};
+try{cart=JSON.parse(localStorage.getItem("potemki-cart")||"{}")||{}}catch(e){cart={}}
+const save=()=>{try{localStorage.setItem("potemki-cart",JSON.stringify(cart))}catch(e){}};
+const byId=k=>P.find(p=>p.id===String(k).split("~")[0]);
+const WAX={olive:"Оливковый",bee:"Пчелиный"};
+const hasWax=p=>p&&p.type!=="aroma"&&p.type!=="decor";
+const waxOf=k=>String(k).split("~")[1]||"olive";
+const matFor=(p,w)=>hasWax(p)?p.mat.replace("Оливковый воск",WAX[w]+" воск"):p.mat;
+function plural(n,f){const a=n%10,b=n%100;return f[(a===1&&b!==11)?0:(a>=2&&a<=4&&(b<10||b>=20))?1:2]}
+
+function media(p){
+  if(p.img) return `<img src="${IMG[p.img]}" alt="${p.name}" loading="lazy">`;
+  return `<div class="ph">${p.col==="collab"?STAMP:STACK}</div>`;
+}
+const label=(t,more)=>`<div class="label">${t}${more?`<button class="bare tl ul more" ${more}>Смотреть все</button>`:''}</div>`;
+function pcell(p){
+  return `<article class="cell">
+    <button class="bare tl cell__title" data-go="product" data-id="${p.id}">${p.name}</button>
+    <div class="cell__meta">${p.line||TYPES[p.type]}</div>
+    <div class="cell__buy"><span class="cell__meta price">${rub(p.price)}</span><button class="pill" data-add="${p.id}">В корзину</button></div>
+    ${p.demo?'<span class="tagline"><span class="badge badge--demo">демо</span></span>':''}
+    <button class="cell__media" data-go="product" data-id="${p.id}" aria-label="${p.name}">${media(p)}</button>
+  </article>`;
+}
+
+/* ───────── главная ───────── */
+const V={};
+let slide=0, slideTimer;
+V.home=()=>{
+  const cnt=c=>P.filter(p=>p.col===c).length;
+  const from=c=>Math.min(...P.filter(p=>p.col===c).map(p=>p.price));
+  const m=byId(MONTH);
+  return `
+<header class="head"><button class="logo" id="logo" data-go="home" aria-label="Потемки — на главную">${WORD}</button></header>
+
+<section class="hero" aria-roledescription="слайдер" aria-label="Статьи журнала">
+  <div class="counter"><span id="slideNo">1/${ARTICLES.length}</span><button class="bare tl" id="next" aria-label="Следующий слайд">→</button></div>
+  <div class="slides">
+  ${ARTICLES.map((a,i)=>`<div class="slide${i===0?" on":""}" data-i="${i}" ${i?'aria-hidden="true"':''}>
+     <img class="slide__img" src="${IMG[a.img]}" alt="">
+     <h2 class="slide__title"><button class="bare tl" data-go="article" data-id="${a.id}" tabindex="${i?-1:0}">${a.title}</button></h2>
+     <button class="pill slide__btn" data-go="article" data-id="${a.id}" tabindex="${i?-1:0}">Читать</button>
+     <p class="slide__meta">${a.kind} · ${a.read}<br>${a.lead}</p>
+   </div>`).join("")}
+  </div>
+  <div class="dots">${ARTICLES.map((a,i)=>`<button data-slide="${i}" aria-label="Слайд ${i+1}" aria-current="${i===0}"></button>`).join("")}</div>
+</section>
+
+<div class="bleed line-t"></div>
+<button class="big" data-go="product" data-id="${MONTH}">Свеча месяца<small>${m.name} · ${rub(m.price)}</small></button>
+
+<section aria-label="Продуктовый каталог" style="margin-top:28px">
+  ${label("Продуктовый каталог",'data-go="catalog"')}
+  <div class="cells cells--3 bleed">
+    <article class="cell">
+      <button class="bare tl cell__title" data-go="catalog" data-col="main">Основная коллекция</button>
+      <div class="cell__meta">Столовые свечи, столбики, аромасвечи<br>${cnt("main")} ${plural(cnt("main"),["товар","товара","товаров"])} · от ${rub(from("main"))}</div>
+      <button class="cell__media" data-go="catalog" data-col="main" aria-label="Основная коллекция"><img src="${IMG["taper-pair"]}" alt=""></button>
+    </article>
+    <article class="cell">
+      <button class="bare tl cell__title" data-go="catalog" data-col="special">Специальная коллекция</button>
+      <div class="cell__meta">Сезонные и художественные свечи<br><span class="badge badge--soon lit">Зима 26-27</span></div>
+      <button class="cell__media" data-go="catalog" data-col="special" aria-label="Специальная коллекция"><img src="${IMG["flame-pair"]}" alt=""></button>
+    </article>
+    <article class="cell">
+      <button class="bare tl cell__title" data-go="catalog" data-col="collab">Коллаборации</button>
+      <div class="cell__meta">Совместные свечи с художниками и брендами<br>Готовим первую</div>
+      <button class="cell__media" data-go="catalog" data-col="collab" aria-label="Коллаборации"><div class="ph">${STAMP}</div></button>
+    </article>
+  </div>
+</section>
+
+<section style="padding-block:28px 72px">
+  ${label("О заводике")}
+  <div class="feature" style="padding-top:24px">
+    <div class="stamp" aria-hidden="true">${STAMP}</div>
+    <div class="feature__text">
+      <h2 class="feature__title">Маленький свечной заводик</h2>
+      <p>Отливаем свечи вручную небольшими партиями из оливкового и соевого воска. <button class="bare tl ul-fg" data-go="about">Читать дальше.</button></p>
+    </div>
+  </div>
+</section>
+
+<section class="inv bleed wrap" aria-label="Журнал">
+  ${label("Журнал")}
+  <div class="feature">
+    <img class="feature__img" src="${IMG["taper-single"]}" alt="">
+    <div class="feature__text">
+      <h2 class="feature__title"><button class="bare tl" data-go="article" data-id="forma">Форма свечи</button></h2>
+      <p>${ARTICLES[0].lead} <button class="bare tl ul-fg" data-go="article" data-id="forma">Читать дальше.</button></p>
+    </div>
+  </div>
+  <div class="feature__more"><button class="pill" data-go="journal">Все статьи журнала</button></div>
+</section>`;
+};
+
+/* ───────── каталог ───────── */
+let F={col:"all",type:"all",sort:"def"};
+V.catalog=()=>{
+  let list=P.filter(p=>(F.col==="all"||p.col===F.col)&&(F.type==="all"||p.type===F.type));
+  if(F.sort==="asc")list.sort((a,b)=>a.price-b.price);
+  if(F.sort==="desc")list.sort((a,b)=>b.price-a.price);
+  const cnt=(k,v)=>P.filter(p=>p[k]===v).length;
+  const title=F.col!=="all"?COLS[F.col]:F.type!=="all"?TYPES[F.type]:"Продуктовый каталог";
+  const intro={main:"Свечи, которые есть всегда: столовые двух высот, столбик, аромасвеча и подсвечники.",special:"Сезонные коллекции и художественные свечи малыми тиражами. Когда партия заканчивается, она не повторяется.",collab:"Совместные свечи с художниками, ресторанами и брендами. Хотите сделать свечу вместе? Пишите на researchzarina@gmail.com"}[F.col]||"Все свечи и подсвечники заводика.";
+  return `<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную">${WORD}</button></header>
+  <div class="page">
+    <div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>Каталог</span></div>
+    <h1 class="display">${title}</h1>
+    <p class="prose-sm muted" style="margin-block:14px 22px">${intro}</p>
+    <div class="chips" role="group" aria-label="Коллекция">
+      <button class="chip" data-f="col" data-v="all" aria-pressed="${F.col==="all"}">Все</button>
+      ${Object.entries(COLS).map(([k,v])=>`<button class="chip" data-f="col" data-v="${k}" aria-pressed="${F.col===k}">${v}<sup>${cnt("col",k)}</sup></button>`).join("")}
+    </div>
+    <div class="chips" role="group" aria-label="Тип" style="padding-top:8px">
+      <button class="chip" data-f="type" data-v="all" aria-pressed="${F.type==="all"}">Все типы</button>
+      ${Object.entries(TYPES).map(([k,v])=>`<button class="chip" data-f="type" data-v="${k}" aria-pressed="${F.type===k}">${v}<sup>${cnt("type",k)}</sup></button>`).join("")}
+    </div>
+    <div class="toolbar"><span class="muted">${list.length} ${plural(list.length,["товар","товара","товаров"])}</span>
+      <select class="select" id="sort" aria-label="Сортировка"><option value="def">По умолчанию</option><option value="asc" ${F.sort==="asc"?"selected":""}>Сначала дешевле</option><option value="desc" ${F.sort==="desc"?"selected":""}>Сначала дороже</option></select></div>
+  </div>
+  ${list.length?`<div class="cells cells--p bleed">${list.map(pcell).join("")}</div>`:
+   `<div class="empty"><p class="h3">Здесь пока пусто</p><button class="pill" data-f="type" data-v="all">Показать все типы</button></div>`}
+  <div style="height:72px"></div>`;
+};
+
+/* ───────── товар ───────── */
+let cur={};
+V.product=()=>{
+  const p=byId(cur.id)||P[0];
+  const like=P.filter(x=>x.id!==p.id&&(x.col===p.col||x.type===p.type)).slice(0,3);
+  return `<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную">${WORD}</button></header>
+  <div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<button class="bare tl" data-go="catalog" data-col="${p.col}">${COLS[p.col]}</button>/<span>${p.name}</span></div>
+  <div class="pdp">
+    <div class="pdp__media bleed" style="margin-right:0">${media(p)}</div>
+    <div class="pdp__info">
+      <span class="muted">${COLS[p.col]} · ${p.line||TYPES[p.type]} ${p.demo?'<span class="badge badge--demo" style="margin-left:6px">демо</span>':''} ${p.id===MONTH?'<span class="badge badge--soon" style="margin-left:6px">Свеча месяца</span>':''}</span>
+      <h1 class="pdp__title">${p.name}</h1>
+      <p>${p.lead}</p>
+      <dl class="facts"><dt>Состав</dt><dd id="pmat">${matFor(p,cur.wax||"olive")}</dd><dt>Размер</dt><dd>${p.size}</dd>${p.notes?`<dt>Ноты</dt><dd>${p.notes}</dd>`:""}</dl>
+      ${hasWax(p)?`<div class="wax"><span class="wax__label">Воск</span><div class="chips" role="group" aria-label="Выбор воска">${Object.entries(WAX).map(([k,v])=>`<button class="chip" data-wax="${k}" aria-pressed="${(cur.wax||"olive")===k}">${v}</button>`).join("")}</div></div>`:""}
+      <div class="pdp__price">${rub(p.price)}</div>
+      <div class="buy"><div class="qty"><button data-q="-1" aria-label="Меньше">−</button><span id="pq">1</span><button data-q="1" aria-label="Больше">+</button></div>
+        <button class="pill pill--hot" data-addq="${p.id}">В корзину</button></div>
+      <p class="muted small">Бесплатная доставка от ${rub(FREE)} · ручная работа, каждая свеча немного отличается</p>
+      <div>
+        <details open><summary>Описание</summary><div>${p.desc}</div></details>
+        <details><summary>Уход</summary><div>Подрезайте фитиль до 5 мм перед каждым зажиганием. Держите свечу вдали от сквозняков и не оставляйте горящей без присмотра. <button class="bare tl ul" data-go="care">Подробнее</button></div></details>
+        <details><summary>Доставка и оплата</summary><div>Курьером: бесплатно от ${rub(FREE)}, иначе ${rub(SHIP)}. Накануне доставки курьер свяжется с вами, чтобы согласовать время и адрес.</div></details>
+      </div>
+    </div>
+  </div>
+  ${like.length?`<section style="padding-bottom:72px">${label("Вам может понравиться")}<div class="cells cells--p bleed">${like.map(pcell).join("")}</div></section>`:""}`;
+};
+
+/* ───────── журнал и страницы ───────── */
+const headLogo=()=>`<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную">${WORD}</button></header>`;
+V.journal=()=>`${headLogo()}<div class="page"><div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>Журнал</span></div>
+  <h1 class="display">Журнал</h1><p class="prose-sm muted" style="margin-block:14px 28px">Эссе о свечах и быте, гиды по уходу, новости заводика.</p></div>
+  <div class="rows bleed wrap line-t">${ARTICLES.map(a=>`<button class="bare row" data-go="article" data-id="${a.id}">
+    <img class="row__img" src="${IMG[a.img]}" alt=""><span class="row__title"><span class="tl">${a.title}</span></span><span class="muted">${a.kind} · ${a.read}</span></button>`).join("")}</div><div style="height:72px"></div>`;
+
+V.article=()=>{const a=ARTICLES.find(x=>x.id===cur.id)||ARTICLES[0];
+  return `${headLogo()}<div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<button class="bare tl" data-go="journal">Журнал</button>/<span>${a.title}</span></div>
+  <article class="article">
+    <img class="article__img" src="${IMG[a.img]}" alt="">
+    <h1 class="display serif">${a.title}</h1>
+    <span class="muted">${a.kind} · ${a.read}</span>
+    <div class="prose">${a.body.map(t=>`<p>${t}</p>`).join("")}</div>
+    <button class="pill" data-go="journal">Все статьи</button>
+  </article>
+  <section style="padding-block:40px 72px">${label("Свечи основной коллекции",'data-go="catalog" data-col="main"')}<div class="cells cells--p bleed">${P.filter(p=>p.col==="main"&&!p.demo).slice(0,3).map(pcell).join("")}</div></section>`};
+V.care=()=>{cur.id="care";return V.article()};
+
+V.about=()=>`${headLogo()}<div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<span>О заводике</span></div>
+  <div class="feature"><div class="stamp" aria-hidden="true">${STAMP}</div>
+  <div class="feature__text" style="max-width:40ch"><h1 class="feature__title">Маленький свечной заводик</h1>
+  <p>Потемки начались как небольшое исследование истории быта. Простая столовая свеча, какой она была до свечного бума, но из теплых натуральных материалов: оливкового и соевого воска, хлопкового фитиля.</p>
+  <p>Мы отливаем свечи вручную небольшими партиями, поэтому каждая немного отличается.</p>
+  <button class="pill" data-go="article" data-id="forma">Читать эссе «Форма свечи»</button></div></div>`;
+
+V.delivery=()=>`${headLogo()}<div class="page"><div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>Доставка и оплата</span></div><h1 class="display" style="margin-bottom:28px">Доставка и оплата</h1></div>
+  <div class="cells cells--3 bleed" style="margin-bottom:24px">
+    <div class="cell" style="padding-bottom:40px"><span class="cell__title">Курьерская доставка</span><span class="cell__meta">Бесплатно от ${rub(FREE)}<br>${rub(SHIP)} при меньшей сумме</span></div>
+    <div class="cell" style="padding-bottom:40px"><span class="cell__title">Подтверждение</span><span class="cell__meta">После заказа пришлем подтверждение на почту</span></div>
+    <div class="cell" style="padding-bottom:40px"><span class="cell__title">День доставки</span><span class="cell__meta">Накануне позвонит курьер и согласует время и адрес</span></div>
+  </div><p class="muted small" style="padding-bottom:72px">Способы оплаты, самовывоз и доставка в другие города: уточняется.</p>`;
+
+V.contacts=()=>`${headLogo()}<div class="page" style="display:grid;gap:22px;padding-bottom:72px"><div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>Контакты</span></div>
+  <h1 class="display">Контакты</h1>
+  <p class="h2 serif" style="user-select:all;word-break:break-all">researchzarina@gmail.com</p>
+  <p class="prose-sm muted">Пишите по заказам, оптовым закупкам и коллаборациям.</p><button class="pill pill--hot" style="justify-self:start" data-copy>Скопировать почту</button></div>`;
+
+function totals(){
+  const sub=Object.entries(cart).reduce((s,[id,q])=>s+(byId(id)?.price||0)*q,0);
+  const ship=sub===0||sub>=FREE?0:SHIP; return {sub,ship,total:sub+ship};
+}
+V.checkout=()=>{
+  const t=totals(); const items=Object.entries(cart).filter(([id])=>byId(id));
+  if(!items.length) return `${headLogo()}<div class="empty" style="padding-block:72px"><h1 class="h2">Корзина пуста</h1><button class="pill" data-go="catalog">Перейти в каталог</button></div>`;
+  return `${headLogo()}<div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<span>Оформление заказа</span></div>
+  <h1 class="display">Оформление</h1>
+  <div class="checkout">
+   <form class="form" id="orderForm" novalidate>
+    <fieldset><legend>Контакты</legend>
+     <label class="lbl" for="o-name">Имя и фамилия<input class="input" id="o-name" name="name" required autocomplete="name" value="Анна Смирнова"></label>
+     <div class="two"><label class="lbl" for="o-phone">Телефон<input class="input" id="o-phone" name="phone" required type="tel" autocomplete="tel" value="+7 900 000-00-00"></label>
+     <label class="lbl" for="o-mail">Почта<input class="input" id="o-mail" name="email" required type="email" autocomplete="email" value="anna@example.com"></label></div></fieldset>
+    <fieldset><legend>Доставка</legend>
+     <label class="opt"><input type="radio" name="ship" id="o-ship-c" value="courier" checked><span><b>Курьер</b><br><span class="muted small">${t.ship?rub(SHIP)+" · бесплатно от "+rub(FREE):"Бесплатно"}</span></span></label>
+     <label class="lbl" for="o-addr">Адрес<input class="input" id="o-addr" name="addr" required autocomplete="street-address" value="ул. Примерная, 1, кв. 1"></label>
+     <label class="lbl" for="o-note">Комментарий<textarea id="o-note" name="note" placeholder="Например, удобное время или упаковка в подарок"></textarea></label></fieldset>
+    <fieldset><legend>Оплата</legend>
+     <label class="opt"><input type="radio" name="pay" id="o-pay-card" value="card" checked><span><b>Картой онлайн</b><br><span class="muted small">Подключим платежную систему при запуске</span></span></label>
+     <label class="opt"><input type="radio" name="pay" id="o-pay-cash" value="cash"><span><b>При получении</b></span></label></fieldset>
+    <p class="err" id="formErr" hidden></p>
+    <button class="pill pill--hot btn-wide" type="submit">Подтвердить заказ · ${rub(t.total)}</button>
+    <p class="note">Это макет: заказ никуда не отправится. Поля заполнены примером.</p>
+   </form>
+   <aside class="summary"><span class="h3" style="padding-bottom:8px">Ваш заказ</span>${cartLines(false)}${sumBlock(false)}</aside>
+  </div>`;
+};
+V.ok=()=>`${headLogo()}<div class="ok"><div class="stamp" style="width:180px">${STAMP}</div><h1 class="display serif">Спасибо!</h1>
+  <p class="prose-sm muted">Заказ № ${cur.no} принят. Мы пришлем подтверждение на почту, а накануне доставки позвонит курьер.</p>
+  <p class="note">Это макет, заказ никуда не отправлен.</p><button class="pill" data-go="home">На главную</button></div>`;
+
+/* ───────── корзина ───────── */
+function cartLines(ctrl=true){
+  const items=Object.entries(cart).filter(([id])=>byId(id));
+  if(!items.length) return `<div class="empty"><p class="h3 serif">В корзине пока пусто</p><button class="pill" data-go="catalog">В каталог</button></div>`;
+  return items.map(([id,q])=>{const p=byId(id);return `<div class="ln">${media(p)}
+    <div><div class="ln__name">${p.name}</div><div class="muted small">${p.size}${hasWax(p)?" · "+WAX[waxOf(id)].toLowerCase()+" воск":""}</div>
+    ${ctrl?`<div class="qty"><button data-cq="${id}" data-d="-1" aria-label="Меньше">−</button><span>${q}</span><button data-cq="${id}" data-d="1" aria-label="Больше">+</button></div><br><button class="bare tl rm" data-rm="${id}">Удалить</button>`:`<div class="muted small">${q} шт.</div>`}</div>
+    <span class="price">${rub(p.price*q)}</span></div>`}).join("");
+}
+function sumBlock(cta=true){
+  const t=totals(); if(!t.sub) return "";
+  const left=FREE-t.sub;
+  return `<div class="sum">
+   ${left>0?`<span class="small muted">До бесплатной доставки ${rub(left)}</span><div class="progress"><i style="width:${Math.min(100,t.sub/FREE*100)}%"></i></div>`:`<span class="small" style="color:var(--ok)">Доставка бесплатно</span>`}
+   <div><span class="muted">Товары</span><span>${rub(t.sub)}</span></div>
+   <div><span class="muted">Доставка</span><span>${t.ship?rub(t.ship):"0 ₽"}</span></div>
+   <div class="total"><span>Итого</span><span>${rub(t.total)}</span></div>
+   ${cta?`<button class="pill pill--hot btn-wide" data-go="checkout">Оформить заказ</button>`:""}</div>`;
+}
+function renderCart(){
+  $("#cartCount").textContent=Object.values(cart).reduce((a,b)=>a+b,0);
+  $("#cartList").innerHTML=cartLines(); $("#cartSum").innerHTML=sumBlock();
+}
+function add(id,q=1,wax="olive"){const p=byId(id);const k=hasWax(p)?id+"~"+wax:id;cart[k]=(cart[k]||0)+q;save();renderCart();toast(`${p.name}${hasWax(p)?", "+WAX[wax].toLowerCase()+" воск":""} — в корзине`)}
+let tt;function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>e.classList.remove("on"),1800)}
+function openCart(on){const d=$("#drawer"),s=$("#scrim");
+  if(on){d.hidden=s.hidden=false;requestAnimationFrame(()=>{d.classList.add("on");s.classList.add("on")})}
+  else if(!d.hidden){d.classList.remove("on");s.classList.remove("on");setTimeout(()=>{d.hidden=s.hidden=true},300)}}
+
+/* ───────── слайдер ───────── */
+function showSlide(i){
+  const s=[...document.querySelectorAll(".slide")]; if(!s.length)return;
+  slide=(i+s.length)%s.length;
+  s.forEach((el,k)=>{el.classList.toggle("on",k===slide);el.toggleAttribute("aria-hidden",k!==slide);el.querySelectorAll("button").forEach(b=>b.tabIndex=k===slide?0:-1)});
+  document.querySelectorAll(".dots button").forEach((d,k)=>d.setAttribute("aria-current",k===slide));
+  $("#slideNo").textContent=`${slide+1}/${s.length}`;
+}
+function startSlides(){clearInterval(slideTimer);
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  slideTimer=setInterval(()=>{if(!document.hidden&&!$(".hero:hover"))showSlide(slide+1)},6000)}
+
+/* ───────── логотип: черный → оранжевый → красный ───────── */
+function heatLogo(el){
+  if(el.dataset.heat)return; el.dataset.heat=1;
+  const css=()=>getComputedStyle(document.documentElement);
+  let anim;
+  el.addEventListener("mouseenter",()=>{const c=css();const from=getComputedStyle(el).color;anim&&anim.cancel();
+    anim=el.animate([{color:from},{color:c.getPropertyValue("--orange").trim()},{color:c.getPropertyValue("--red").trim()}],{duration:900,easing:"ease-in-out",fill:"forwards"})});
+  el.addEventListener("mouseleave",()=>{const c=css();const from=getComputedStyle(el).color;anim&&anim.cancel();
+    anim=el.animate([{color:from},{color:c.getPropertyValue("--orange").trim()},{color:c.getPropertyValue("--fg").trim()}],{duration:900,easing:"ease-in-out",fill:"forwards"});
+    anim.onfinish=()=>{anim.cancel();anim=null}});
+}
+
+/* ───────── навигация ───────── */
+let view="home";
+function go(v,data={}){
+  if(v==="catalog")F={col:data.col||"all",type:data.type||"all",sort:"def"};
+  if(data.id)cur.id=data.id;
+  if(v==="product")cur.wax="olive";
+  view=v; $("#app").innerHTML=V[v](); $("#menu").hidden=true; openCart(false);
+  window.scrollTo({top:0,behavior:"instant"});
+  document.querySelectorAll(".logo").forEach(heatLogo);
+  if(v==="home"){slide=0;startSlides()}else clearInterval(slideTimer);
+  if(["home","catalog","journal","about","delivery","contacts","checkout"].includes(v)){try{history.replaceState(null,"","#"+v)}catch(e){}}
+}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button,[data-go]"); if(!t)return;
+  if(t.dataset.go){e.preventDefault();go(t.dataset.go,{...t.dataset});return}
+  if(t.dataset.add){add(t.dataset.add);return}
+  if(t.dataset.addq){add(t.dataset.addq,+$("#pq").textContent,cur.wax||"olive");return}
+  if(t.dataset.wax){cur.wax=t.dataset.wax;document.querySelectorAll("[data-wax]").forEach(b=>b.setAttribute("aria-pressed",b===t));const p=byId(cur.id);$("#pmat").textContent=matFor(p,cur.wax);return}
+  if(t.dataset.q){const s=$("#pq");s.textContent=Math.max(1,+s.textContent+ +t.dataset.q);return}
+  if(t.dataset.cq){const id=t.dataset.cq;cart[id]=Math.max(0,(cart[id]||0)+ +t.dataset.d);if(!cart[id])delete cart[id];save();renderCart();return}
+  if(t.dataset.rm){delete cart[t.dataset.rm];save();renderCart();return}
+  if(t.dataset.f){F[t.dataset.f]=t.dataset.v;$("#app").innerHTML=V.catalog();document.querySelectorAll(".logo").forEach(heatLogo);return}
+  if(t.dataset.slide){showSlide(+t.dataset.slide);startSlides();return}
+  if(t.id==="next"){showSlide(slide+1);startSlides();return}
+  if(t.hasAttribute("data-copy")){copyMail();return}
+});
+function copyMail(){const m="researchzarina@gmail.com";
+  try{navigator.clipboard.writeText(m).then(()=>toast("Почта скопирована"),()=>toast(m))}catch(e){toast(m)}}
+document.addEventListener("change",e=>{if(e.target.id==="sort"){F.sort=e.target.value;$("#app").innerHTML=V.catalog();document.querySelectorAll(".logo").forEach(heatLogo)}});
+document.addEventListener("submit",e=>{
+  e.preventDefault();
+  if(e.target.id==="newsForm"){const i=$("#newsEmail");if(!i.checkValidity()||!i.value){toast("Проверьте адрес почты");return}i.value="";toast("Готово, вы подписаны");return}
+  if(e.target.id==="orderForm"){const f=e.target,err=$("#formErr");
+    const bad=[...f.querySelectorAll("[required]")].filter(i=>!i.value.trim()||!i.checkValidity());
+    if(bad.length){err.textContent="Заполните поля: "+bad.map(i=>i.closest("label").childNodes[0].textContent.trim()).join(", ");err.hidden=false;bad[0].focus();return}
+    cur.no=String(Date.now()).slice(-5);cart={};save();renderCart();go("ok")}
+});
+$("#menuBtn").onclick=()=>{$("#menu").hidden=false;document.querySelectorAll(".logo").forEach(heatLogo)};
+$("#menuClose").onclick=()=>{$("#menu").hidden=true};
+$("#cartBtn").onclick=()=>openCart(true);
+$("#cartClose").onclick=()=>openCart(false);
+$("#scrim").onclick=()=>openCart(false);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){openCart(false);$("#menu").hidden=true}});
+
+const MQ=["Бесплатная доставка от 3 000 ₽","Специальная коллекция «Зима 26-27» скоро","Каждая свеча отлита вручную","Оливковый воск, хлопковый фитиль, поталь","Пишите о коллаборациях: researchzarina@gmail.com"];
+$("#mq").innerHTML=[...MQ,...MQ].map(t=>`<span>${t}</span>`).join("");
+
+/* ───────── огоньки ───────── */
+(function fire(){
+  const cv=$("#fireCanvas"), ctx=cv.getContext("2d"); let W=0,H=0,dpr=1,flames=[];
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function size(){dpr=Math.min(2,window.devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;
+    flames=[];const gx=Math.max(54,W/22),gy=70;let r=0;
+    for(let y=gy*.7;y<H+gy;y+=gy,r++)for(let x=(r%2?gx/2:0)-gx;x<W+gx;x+=gx)
+      flames.push({x,y,s:.65+Math.random()*.6,ph:Math.random()*6.28,sp:.8+Math.random()*1.4})}
+  function flame(f,t){
+    const k=f.s*(1+.10*Math.sin(t*f.sp*3.1+f.ph)+.05*Math.sin(t*f.sp*7.3+f.ph*2));
+    const sway=Math.sin(t*f.sp*1.7+f.ph)*4*f.s, h=34*k, w=11*f.s;
+    const x=((f.x+t*14)%(W+120))-60, y=f.y;
+    ctx.globalCompositeOperation="lighter";
+    const g=ctx.createRadialGradient(x,y-h*.35,0,x,y-h*.35,h*1.5);
+    g.addColorStop(0,"rgba(255,120,40,.30)");g.addColorStop(1,"rgba(255,70,20,0)");
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y-h*.35,h*1.5,0,6.29);ctx.fill();
+    ctx.globalCompositeOperation="source-over";
+    const fl=ctx.createLinearGradient(x,y,x,y-h);
+    fl.addColorStop(0,"#e32118");fl.addColorStop(.55,"#ff7a1c");fl.addColorStop(1,"#ffb347");
+    ctx.fillStyle=fl;ctx.beginPath();ctx.moveTo(x,y);
+    ctx.bezierCurveTo(x-w*1.25,y-h*.25,x-w*.55+sway*.4,y-h*.7,x+sway,y-h);
+    ctx.bezierCurveTo(x+w*.55+sway*.4,y-h*.7,x+w*1.25,y-h*.25,x,y);ctx.fill();
+    ctx.fillStyle="rgba(255,236,200,.9)";ctx.beginPath();ctx.ellipse(x+sway*.25,y-h*.22,w*.32,h*.2,0,0,6.29);ctx.fill();
+  }
+  let hole=null;function measure(){const e=document.querySelector('.emblem'),s=cv.getBoundingClientRect();if(!e)return;const r=e.getBoundingClientRect();hole={x:r.left-s.left+r.width/2,y:r.top-s.top+r.height/2,rx:r.width/2+30,ry:r.height/2+34}}
+  function draw(ms){const t=reduce?0:ms/1000;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);flames.forEach(f=>{if(hole){const x=((f.x+t*14)%(W+120))-60,dx=(x-hole.x)/hole.rx,dy=(f.y-14-hole.y)/hole.ry;if(dx*dx+dy*dy<1)return}flame(f,t)});if(!reduce)requestAnimationFrame(draw)}
+  size();measure();addEventListener("resize",()=>{size();measure()});requestAnimationFrame(draw);
+})();
+
+renderCart();
+const h=(location.hash||"").slice(1);
+go(V[h]&&!["product","article","ok"].includes(h)?h:"home");
+</script>
