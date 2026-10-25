@@ -315,62 +315,80 @@ details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
 .prose-sm p+p{margin-top:1em}
 
 
-/* ── телефон ── */
+.logo .ls{display:none}
+/* ── телефон: как мобильная версия MoMu — одна колонка, крупный текст, много воздуха ── */
 @media (max-width:759px){
-  body{font-size:16px}
-  .marquee__track{font-size:17px;gap:64px;padding-left:64px}
-  .head{padding-top:20px;min-height:60px}
-  .logo{width:min(46vw,190px)}
-  .pills{top:calc(env(safe-area-inset-top,0px) + var(--mq) + 14px);gap:6px}
-  .pill{height:36px;padding:0 14px 2px;font-size:15px}
-  .label{font-size:15px;padding-block:16px 14px;white-space:nowrap}
-  .label .more{font-size:15px}
+  body{font-size:19px;line-height:1.35}
+  .marquee__track{font-size:20px;gap:64px;padding-left:64px}
+  .head{padding-top:20px;min-height:64px}
+  .logo{width:auto}
+  .logo .lw{display:none}
+  .logo .ls{display:block;width:84px}
+  .logo .ls svg{width:100%;height:auto;display:block}
+  .head{min-height:104px}
+  .pills{top:calc(env(safe-area-inset-top,0px) + var(--mq) + 16px);gap:8px}
+  .pill{height:42px;padding:0 18px 2px;font-size:19px}
+  .pill .count{min-width:26px;height:26px;font-size:14px}
+  .label{font-size:19px;padding-block:22px 18px;white-space:nowrap}
+  .label::before{width:16px;height:16px}
+  .label .more{font-size:17px}
   /* слайдер */
-  .hero{padding-bottom:36px}
-  .slide__img{width:min(62vw,250px);margin-top:16px}
-  .counter{position:static;order:2;justify-content:center;font-size:18px;margin-top:14px;gap:12px}
-  .hero{display:flex;flex-direction:column;align-items:center}
-  .slides{order:1}
-  .dots{order:3;margin-top:10px}
-  .slide__title{font-size:clamp(34px,10.5vw,46px);margin-top:20px}
-  .slide__btn{margin-top:14px}
-  .slide__meta{font-size:16px;margin-top:14px;padding-inline:8px}
-  .big{margin-block:28px 4px;font-size:clamp(36px,11vw,52px)}
-  /* ячейки */
-  .cell__title{font-size:18px}
-  .cell__meta{font-size:15px}
-  .cell__media{width:min(170px,52%);margin:28px auto 24px}
-  .cells--p .cell{padding:14px 12px 0}
-  .cells--p .cell:nth-child(odd){padding-left:var(--pl)}
-  .cells--p .cell:nth-child(even){padding-right:var(--pr)}
-  .cells--p .cell__title{font-size:16px;text-wrap:balance}
-  .cells--p .cell__buy{flex-direction:column;align-items:flex-start;gap:8px}
-  .cells--p .cell__buy .pill{height:32px;font-size:14px}
-  .cells--p .cell__media{width:86%;margin:20px auto 16px}
-  .tagline{position:static;margin-top:6px}
+  .hero{display:grid;padding-bottom:40px}
+  .counter{display:none}
+  .slide__img{width:min(50vw,210px);margin-top:20px}
+  .slide__title{font-size:clamp(34px,10vw,44px);margin-top:22px;line-height:1.02}
+  .slide__btn{margin-top:-16px;height:44px;font-size:19px;padding:0 22px 2px}
+  .slide__meta{font-size:19px;margin-top:20px;padding-inline:4px}
+  .dots{margin-top:26px;gap:10px}
+  .dots button{width:14px;height:14px;border:0;background:#f6c9c2}
+  .dots button[aria-current="true"]{background:var(--red)}
+  .big{margin-block:28px 6px;font-size:clamp(38px,11.5vw,54px);padding:.14em .3em .2em}
+  .big small{font-size:15px}
+  /* ячейки: одна колонка */
+  .cells--3,.cells--p{grid-template-columns:1fr}
+  .cells--3 .cell,.cells--p .cell,.cells--p .cell:nth-child(odd),.cells--p .cell:nth-child(even){padding:20px var(--pr) 0 var(--pl);border-right:0;border-bottom:1px solid var(--line)}
+  .cells--3 .cell:last-child,.cells--p .cell:last-child{border-bottom:0}
+  .cell__title,.cells--p .cell__title{font-size:20px;text-wrap:balance}
+  .cell__meta{font-size:19px}
+  .cell__media,.cells--p .cell__media{width:min(52vw,210px);margin:64px auto 52px}
+  .cell__buy,.cells--p .cell__buy{flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;margin-top:8px}
+  .cell__buy .pill,.cells--p .cell__buy .pill{height:38px;font-size:16px;padding:0 16px 2px}
+  .tagline{position:static;margin-top:8px}
   /* каталог */
   .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(var(--pl)*-1) calc(var(--pr)*-1);padding:8px var(--pr) 18px var(--pl)}
   .chips::-webkit-scrollbar{display:none}
-  .chip{height:36px;padding:0 14px 2px;font-size:15px;flex:none}
-  .toolbar{padding-block:8px 12px}
-  .display{font-size:clamp(36px,11vw,48px)}
+  .chip{height:40px;padding:0 16px 2px;font-size:17px;flex:none}
+  .toolbar{padding-block:6px 14px}
+  .display{font-size:clamp(38px,11vw,50px)}
   /* разделы */
-  .feature{padding-block:28px 48px;gap:24px}
-  .feature__img{width:min(240px,64%)}
+  .feature{padding-block:36px 56px;gap:24px}
+  .feature__img{width:min(56vw,240px)}
+  .feature__text{max-width:none}
   .feature__title{font-size:30px}
-  .fire{padding-block:36px}
-  .fire__box{padding:22px 18px}
-  .tiles{gap:10px;padding-block:28px 44px}
-  .tile{min-height:96px;font-size:16px}
-  .foot{gap:22px;padding-block:32px 22px;font-size:16px}
-  .pdp{gap:22px}
-  .pdp__media{padding-block:28px}
-  .pdp__media>*{width:min(300px,74%)}
-  .pdp__title{font-size:34px}
-  .menu__grid{gap:26px;padding-top:20px}
-  .menu__grid button{font-size:22px}
-  .article .prose{font-size:18px}
-  .row__img{width:96px}
+  .stamp{width:min(60vw,240px)}
+  .fire{padding-block:40px}
+  .fire__box{padding:24px 18px;width:calc(100% - 32px)}
+  .fire__box .field{flex-direction:column}
+  .fire__box .input,.fire__box .pill{width:100%;height:50px;flex:none}
+  .fire__box .pill{font-size:19px}
+  .tiles{grid-template-columns:1fr;gap:14px;padding-block:28px 48px}
+  .tile{min-height:128px;font-size:20px}
+  .foot{gap:28px;padding-block:36px 24px;font-size:19px}
+  .foot ul{gap:8px}
+  .foot__logo{width:min(70vw,260px)}
+  .pdp{gap:24px}
+  .pdp__media{padding-block:40px}
+  .pdp__media>*{width:min(62vw,260px)}
+  .pdp__title{font-size:36px}
+  .facts{font-size:17px}
+  .menu__grid{gap:30px;padding-top:24px}
+  .menu__grid h4{font-size:17px}
+  .menu__grid button{font-size:26px}
+  .article .prose{font-size:19px}
+  .rows .row{gap:14px}
+  .row__img{width:min(52vw,210px);justify-self:center;margin-block:12px}
+  .row__title{font-size:24px}
+  .crumbs{font-size:15px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -561,7 +579,7 @@ V.home=()=>{
   const from=c=>Math.min(...P.filter(p=>p.col===c).map(p=>p.price));
   const m=byId(MONTH);
   return `
-<header class="head"><button class="logo" id="logo" data-go="home" aria-label="Потемки — на главную">${WORD}</button></header>
+<header class="head"><button class="logo" id="logo" data-go="home" aria-label="Потемки — на главную"><span class="lw">${WORD}</span><span class="ls">${STACK}</span></button></header>
 
 <section class="hero" aria-roledescription="слайдер" aria-label="Статьи журнала">
   <div class="counter"><span id="slideNo">1/${ARTICLES.length}</span><button class="bare tl" id="next" aria-label="Следующий слайд">→</button></div>
@@ -633,7 +651,7 @@ V.catalog=()=>{
   const cnt=(k,v)=>P.filter(p=>p[k]===v).length;
   const title=F.col!=="all"?COLS[F.col]:F.type!=="all"?TYPES[F.type]:"Продуктовый каталог";
   const intro={main:"Свечи, которые есть всегда: столовые двух высот, столбик, аромасвеча и подсвечники.",special:"Сезонные коллекции и художественные свечи малыми тиражами. Когда партия заканчивается, она не повторяется.",collab:"Совместные свечи с художниками, ресторанами и брендами. Хотите сделать свечу вместе? Пишите на researchzarina@gmail.com"}[F.col]||"Все свечи и подсвечники заводика.";
-  return `<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную">${WORD}</button></header>
+  return `<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную"><span class="lw">${WORD}</span><span class="ls">${STACK}</span></button></header>
   <div class="page">
     <div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>Каталог</span></div>
     <h1 class="display">${title}</h1>
@@ -659,7 +677,7 @@ let cur={};
 V.product=()=>{
   const p=byId(cur.id)||P[0];
   const like=P.filter(x=>x.id!==p.id&&(x.col===p.col||x.type===p.type)).slice(0,3);
-  return `<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную">${WORD}</button></header>
+  return `<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную"><span class="lw">${WORD}</span><span class="ls">${STACK}</span></button></header>
   <div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<button class="bare tl" data-go="catalog" data-col="${p.col}">${COLS[p.col]}</button>/<span>${p.name}</span></div>
   <div class="pdp">
     <div class="pdp__media bleed" style="margin-right:0">${media(p)}</div>
@@ -684,7 +702,7 @@ V.product=()=>{
 };
 
 /* ───────── журнал и страницы ───────── */
-const headLogo=()=>`<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную">${WORD}</button></header>`;
+const headLogo=()=>`<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную"><span class="lw">${WORD}</span><span class="ls">${STACK}</span></button></header>`;
 V.journal=()=>`${headLogo()}<div class="page"><div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>Журнал</span></div>
   <h1 class="display">Журнал</h1><p class="prose-sm muted" style="margin-block:14px 28px">Эссе о свечах и быте, гиды по уходу, новости заводика.</p></div>
   <div class="rows bleed wrap line-t">${ARTICLES.map(a=>`<button class="bare row" data-go="article" data-id="${a.id}">
