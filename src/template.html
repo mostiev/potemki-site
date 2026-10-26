@@ -203,9 +203,16 @@ p{margin:0}
 @keyframes blink{0%,50%{color:var(--red);box-shadow:var(--sh-hot)}51%,100%{color:var(--pill-fg);box-shadow:var(--sh)}}
 
 
+/* ── роза над свечой месяца ── */
+.rose{margin:6px auto 0;display:grid;justify-items:center}
+.rose img{width:clamp(220px,25vw,360px);height:auto;display:block;transition:filter .5s,transform .5s}
+.rose img:hover{filter:drop-shadow(8px 10px 26px rgba(227,33,24,.35));transform:rotate(-2deg)}
+.big--first{margin-top:18px}
 /* ── подвал короткий ── */
-@media (min-width:800px){.foot--min{grid-template-columns:1fr auto;align-items:start}}
-.foot--min ul{gap:6px}
+.foot.foot--min{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 40px;padding-block:22px 14px}
+.foot--min .foot__logo{width:170px}
+.foot.foot--min ul{display:flex;flex-wrap:wrap;gap:8px 32px}
+.copy{padding-block:0 22px}
 /* ── письма: без плашки ── */
 .fire__title{margin-top:10px;text-transform:uppercase;letter-spacing:.3em;padding-left:.3em;font-size:clamp(18px,1.9vw,26px);color:#fff;text-align:center}
 .fire__sub{color:rgba(255,255,255,.8);text-align:center;max-width:40ch;font-size:16px;margin-top:-14px}
@@ -215,17 +222,21 @@ p{margin:0}
 .nl__go{position:absolute;right:5px;top:5px;width:40px;height:40px;border-radius:50%;border:0;background:#000;color:#fff;font-size:20px;transition:box-shadow .35s,background .35s}
 .nl__go:hover{background:var(--red);box-shadow:0 0 16px rgba(255,110,40,.6)}
 /* ── в огне ── */
-.vogne{background-color:#b6b5b2;background-image:var(--grey);background-size:320px;padding-block:4px 34px}
+.vogne{padding-block:4px 40px}
 .vogne .label{border-bottom:1px solid #000;color:#000}
 .vogne .label .more{color:#000}
-.strip3{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 2*28px)/3);gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding-block:22px 6px;scrollbar-width:thin;color:#000}
+.strip3{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 2*28px)/3);gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding-block:22px 6px;scrollbar-width:thin}
 .strip3::-webkit-scrollbar{height:4px}.strip3::-webkit-scrollbar-thumb{background:#000}
-.acard{display:grid;gap:10px;align-content:start;scroll-snap-align:start;text-align:left;color:#000}
+.acard{display:flex;flex-direction:column;gap:10px;scroll-snap-align:start;text-align:left;color:var(--fg)}
+.acard__link{display:grid;gap:12px;text-align:left}
+.acard__lead{font-size:16px;color:var(--muted)}
+.acard__btn{align-self:flex-start;margin-top:auto}
+.acard__lead{margin-bottom:6px}
 .acard__img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;transition:box-shadow .45s,transform .45s}
-.acard:hover .acard__img{box-shadow:var(--sh-hot);transform:translateY(-2px)}
+.acard__link:hover .acard__img{box-shadow:var(--sh-hot);transform:translateY(-2px)}
 .acard__title{font-family:var(--serif);font-weight:300;font-size:clamp(22px,2vw,28px);line-height:1.12}
-.acard:hover .acard__title{text-decoration:underline 2px var(--red);text-underline-offset:.18em}
-.acard__meta{font-size:15px;color:#3b3936}
+.acard__link:hover .acard__title{text-decoration:underline 2px var(--red);text-underline-offset:.18em}
+.acard__meta{font-size:15px;color:var(--muted)}
 /* ── о заводике (как страница MoMu Museum) ── */
 .mus{padding-block:44px 64px}
 .mus__lab{display:flex;justify-content:center;align-items:center;gap:10px;font-size:17px;text-transform:uppercase}
@@ -431,7 +442,10 @@ details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
   .row__img{width:min(52vw,210px);justify-self:center;margin-block:12px}
   .row__title{font-size:24px}
   .crumbs{font-size:15px}
-  .strip3{grid-auto-columns:80%;gap:18px}
+  .strip3{grid-auto-columns:82%;gap:18px}
+  .rose img{width:min(64vw,260px)}
+  .foot.foot--min{flex-direction:column;align-items:flex-start;gap:14px;padding-block:22px 12px}
+  .foot.foot--min ul{flex-direction:column;gap:8px}
   .vogne{padding-block:2px 26px}
   .mus{padding-block:32px 48px}
   .mus__lead{font-size:30px}
@@ -620,21 +634,8 @@ V.home=()=>{
   return `
 <header class="head"><button class="logo" id="logo" data-go="home" aria-label="Потемки — на главную"><span class="lw">${WORD}</span><span class="ls">${STACK}</span></button></header>
 
-<section class="hero" aria-roledescription="слайдер" aria-label="Статьи">
-  <div class="counter"><span id="slideNo">1/${ARTICLES.length}</span><button class="bare tl" id="next" aria-label="Следующий слайд">→</button></div>
-  <div class="slides">
-  ${ARTICLES.map((a,i)=>`<div class="slide${i===0?" on":""}" data-i="${i}" ${i?'aria-hidden="true"':''}>
-     <img class="slide__img" src="${IMG[a.img]}" alt="">
-     <h2 class="slide__title"><button class="bare tl" data-go="article" data-id="${a.id}" tabindex="${i?-1:0}">${a.title}</button></h2>
-     <button class="pill slide__btn" data-go="article" data-id="${a.id}" tabindex="${i?-1:0}">Читать</button>
-     <p class="slide__meta">${a.kind} · ${a.read}<br>${a.lead}</p>
-   </div>`).join("")}
-  </div>
-  <div class="dots">${ARTICLES.map((a,i)=>`<button data-slide="${i}" aria-label="Слайд ${i+1}" aria-current="${i===0}"></button>`).join("")}</div>
-</section>
-
-<div class="bleed line-t"></div>
-<button class="big" data-go="product" data-id="${MONTH}">Свеча месяца<small>${m.name} · ${rub(m.price)}</small></button>
+<figure class="rose" aria-hidden="true"><img id="roseImg" alt=""></figure>
+<button class="big big--first" data-go="product" data-id="${MONTH}">Свеча месяца<small>${m.name} · ${rub(m.price)}</small></button>
 
 <section aria-label="Продуктовый каталог" style="margin-top:28px">
   ${label("Продуктовый каталог",'data-go="catalog"')}
@@ -679,7 +680,7 @@ function museum(full){
   <div class="mus__more">${full?`<button class="pill" data-go="article" data-id="forma">Читать эссе «Форма свечи»</button>`:`<button class="bare tl ul-fg" data-go="about">Подробнее о заводике</button>`}</div>
 </section>`;
 }
-const acard=a=>`<button class="bare acard" data-go="article" data-id="${a.id}"><img class="acard__img" src="${IMG[a.img]}" alt=""><span class="acard__title">${a.title}</span><span class="acard__meta">${a.kind} · ${a.read}</span></button>`;
+const acard=a=>`<article class="acard"><button class="bare acard__link" data-go="article" data-id="${a.id}"><img class="acard__img" src="${IMG[a.img]}" alt=""><span class="acard__title">${a.title}</span></button><span class="acard__meta">${a.kind} · ${a.read}</span><p class="acard__lead">${a.lead}</p><button class="pill acard__btn" data-go="article" data-id="${a.id}">Читать</button></article>`;
 
 /* ───────── каталог ───────── */
 let F={col:"all",type:"all",sort:"def"};
@@ -905,7 +906,8 @@ function go(v,data={},push=true){
   view=v; $("#app").innerHTML=V[v](); $("#menu").hidden=true; openCart(false);
   window.scrollTo({top:0,behavior:"instant"});
   document.querySelectorAll(".logo").forEach(heatLogo);
-  if(v==="home"){slide=0;startSlides()}else clearInterval(slideTimer);
+  if(v==="home"){const r=$("#roseImg");if(r)r.src=TEX.rose}
+  clearInterval(slideTimer);
   if(push){const h=hashFor(v,data);try{if(location.hash!==h)history.pushState({v},"",h)}catch(e){}}
 }
 window.addEventListener("popstate",()=>{const r=parseHash();go(r.v,r.data,false)});
@@ -952,6 +954,7 @@ $("#mq").innerHTML=[...MQ,...MQ].map(t=>`<span>${t}</span>`).join("");
 /* ───────── огоньки: штриховка карандашом ───────── */
 document.documentElement.style.setProperty("--grey",`url(${TEX.grey_tile})`);
 $("#bigFlame").setAttribute("href",TEX.big);
+window.__rose=TEX.rose;
 (function fire(){
   const cv=$("#fireCanvas"), ctx=cv.getContext("2d"); let W=0,H=0,dpr=1,flames=[];
   const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;

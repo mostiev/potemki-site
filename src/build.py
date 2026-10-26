@@ -12,7 +12,7 @@ imgs = {n: "data:image/jpeg;base64," + base64.b64encode(open(os.path.join(SRC, "
 tex = {}
 for f in sorted(os.listdir(os.path.join(SRC, "tex"))):
     k, ext = os.path.splitext(f)
-    mime = "image/png" if ext == ".png" else "image/jpeg"
+    mime = {".png": "image/png", ".webp": "image/webp"}.get(ext, "image/jpeg")
     tex[k] = "data:%s;base64,%s" % (mime, base64.b64encode(open(os.path.join(SRC, "tex", f), "rb").read()).decode())
 t = t.replace("{{TEX_JSON}}", json.dumps(tex))
 t = (t.replace("{{IMG_JSON}}", json.dumps(imgs)).replace("{{LOGO_WORD}}", svg("wordmark.svg"))
