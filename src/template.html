@@ -195,13 +195,55 @@ p{margin:0}
 
 /* ── плитки ── */
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding-block:40px 64px}
-@media (min-width:760px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}}
+@media (min-width:760px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}}
 .tile{min-height:clamp(110px,13vw,175px);display:grid;place-items:center;text-align:center;padding:16px;background:var(--pill);color:var(--pill-fg);border:0;box-shadow:var(--sh);font-size:clamp(17px,1.5vw,21px);transition:color .35s,box-shadow .35s}
 .tile:hover{color:var(--red);box-shadow:var(--sh-hot)}
 .tile--blink{animation:blink 1s infinite}
 .tile--blink:hover{animation-play-state:paused}
 @keyframes blink{0%,50%{color:var(--red);box-shadow:var(--sh-hot)}51%,100%{color:var(--pill-fg);box-shadow:var(--sh)}}
 
+
+/* ── подвал короткий ── */
+@media (min-width:800px){.foot--min{grid-template-columns:1fr auto;align-items:start}}
+.foot--min ul{gap:6px}
+/* ── письма: без плашки ── */
+.fire__title{margin-top:10px;text-transform:uppercase;letter-spacing:.3em;padding-left:.3em;font-size:clamp(18px,1.9vw,26px);color:#fff;text-align:center}
+.fire__sub{color:rgba(255,255,255,.8);text-align:center;max-width:40ch;font-size:16px;margin-top:-14px}
+.fire__in{padding-left:var(--pl);padding-right:var(--pr)}
+.nl{position:relative;width:min(460px,100%)}
+.nl .input{width:100%;height:50px;border-radius:999px;padding:0 64px 2px 22px;background:#fff;color:#000;border:0;box-shadow:8px 10px 37px rgba(0,0,0,.35);font-size:17px}
+.nl__go{position:absolute;right:5px;top:5px;width:40px;height:40px;border-radius:50%;border:0;background:#000;color:#fff;font-size:20px;transition:box-shadow .35s,background .35s}
+.nl__go:hover{background:var(--red);box-shadow:0 0 16px rgba(255,110,40,.6)}
+/* ── в огне ── */
+.vogne{background-color:#b6b5b2;background-image:var(--grey);background-size:320px;padding-block:4px 34px}
+.vogne .label{border-bottom:1px solid #000;color:#000}
+.vogne .label .more{color:#000}
+.strip3{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 2*28px)/3);gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding-block:22px 6px;scrollbar-width:thin;color:#000}
+.strip3::-webkit-scrollbar{height:4px}.strip3::-webkit-scrollbar-thumb{background:#000}
+.acard{display:grid;gap:10px;align-content:start;scroll-snap-align:start;text-align:left;color:#000}
+.acard__img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;transition:box-shadow .45s,transform .45s}
+.acard:hover .acard__img{box-shadow:var(--sh-hot);transform:translateY(-2px)}
+.acard__title{font-family:var(--serif);font-weight:300;font-size:clamp(22px,2vw,28px);line-height:1.12}
+.acard:hover .acard__title{text-decoration:underline 2px var(--red);text-underline-offset:.18em}
+.acard__meta{font-size:15px;color:#3b3936}
+/* ── о заводике (как страница MoMu Museum) ── */
+.mus{padding-block:44px 64px}
+.mus__lab{display:flex;justify-content:center;align-items:center;gap:10px;font-size:17px;text-transform:uppercase}
+.mus__lab::before{content:"";width:15px;height:15px;border-radius:50%;background:currentColor}
+.mus__lead{font-family:var(--serif);font-weight:300;font-size:clamp(28px,3.4vw,50px);line-height:1.1;text-align:center;max-width:26ch;margin:16px auto 30px;text-wrap:balance}
+.mus__body{display:grid;gap:1em;max-width:58ch;padding-block:26px 30px;font-size:18px}
+.gal{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--pr) 6px var(--pl);scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.gal figure{margin:0;flex:none;scroll-snap-align:start;display:grid;gap:8px}
+.gal img{height:clamp(240px,30vw,430px);width:auto;max-width:none;display:block}
+.gal figcaption{display:flex;gap:28px;font-size:14px}
+.mus__more{padding-top:24px}
+/* ── документы ── */
+.doc{display:grid;gap:18px;padding-bottom:72px;max-width:66ch}
+.fb{display:grid;gap:14px;max-width:560px}
+.fb .input,.fb textarea{width:100%;border:0;background:var(--tile);box-shadow:inset 1px 2px 30px rgba(0,0,0,.08);font-size:17px}
+.fb .input{height:50px;border-radius:999px;padding:0 20px 2px}
+.fb textarea{min-height:140px;border-radius:24px;padding:16px 20px;resize:vertical}
 /* ── подвал ── */
 .foot{display:grid;gap:28px;padding-block:44px 28px;border-top:1px solid var(--line);font-size:17px}
 @media (min-width:800px){.foot{grid-template-columns:1.4fr 1fr 1fr 1fr}}
@@ -389,6 +431,15 @@ details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
   .row__img{width:min(52vw,210px);justify-self:center;margin-block:12px}
   .row__title{font-size:24px}
   .crumbs{font-size:15px}
+  .strip3{grid-auto-columns:80%;gap:18px}
+  .vogne{padding-block:2px 26px}
+  .mus{padding-block:32px 48px}
+  .mus__lead{font-size:30px}
+  .mus__body{font-size:19px}
+  .gal{gap:16px}
+  .gal img{height:280px}
+  .fire__sub{margin-top:-10px}
+  .tiles{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -397,7 +448,7 @@ details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
 
 <div class="pills">
   <button class="pill hide-sm" data-go="catalog">Магазин</button>
-  <button class="pill hide-sm" data-go="journal">Журнал</button>
+  <button class="pill hide-sm" data-go="journal">В огне</button>
   <button class="pill" id="cartBtn" aria-label="Корзина"><span class="hide-sm">Корзина</span><svg class="show-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="count lit" id="cartCount">0</span></button>
   <button class="pill" id="menuBtn">Меню</button>
 </div>
@@ -405,48 +456,35 @@ details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
 <main id="app" class="wrap"></main>
 
 <div class="wrap">
-  <section class="fire bleed" aria-label="Подписка">
+  <section class="fire bleed" aria-label="Письма из Потемок">
     <canvas id="fireCanvas" aria-hidden="true"></canvas>
     <div class="fire__in">
-    <div class="emblem" aria-hidden="true"><svg class="oval" viewBox="-4 -4 128 168">
-      <defs><radialGradient id="bigG" cx=".5" cy=".7" r=".62"><stop offset="0" stop-color="#ffc25a"/><stop offset=".45" stop-color="#ff8a24"/><stop offset="1" stop-color="#d42a1c"/></radialGradient>
-      <radialGradient id="haloG"><stop offset="0" stop-color="#ff8a2a" stop-opacity=".55"/><stop offset="1" stop-color="#ff5a1e" stop-opacity="0"/></radialGradient></defs>
-      <ellipse class="halo" cx="60" cy="96" rx="40" ry="46" fill="url(#haloG)"/>
-      <path d="M42.8 11.5C44.2 11.1 48.3 9.3 51.1 8.7C53.9 8.1 56.8 8.0 59.6 8.2C62.5 8.4 65.3 9.0 68.1 9.9C70.9 10.8 73.7 12.1 76.3 13.7C78.9 15.3 81.5 17.3 83.9 19.5C86.4 21.7 88.7 24.2 90.9 26.9C93.0 29.6 95.1 32.6 97.0 35.7C98.9 38.9 100.6 42.3 102.2 45.8C103.8 49.3 105.2 53.1 106.3 56.9C107.5 60.8 108.5 64.8 109.2 68.9C109.9 73.0 110.5 77.2 110.7 81.4C110.9 85.7 110.8 90.0 110.5 94.2C110.1 98.4 109.5 102.7 108.6 106.7C107.7 110.7 106.4 114.6 104.9 118.3C103.5 121.9 101.7 125.4 99.7 128.5C97.8 131.6 95.6 134.5 93.2 136.9C90.9 139.4 88.3 141.6 85.7 143.4C83.1 145.2 80.3 146.6 77.6 147.7C74.8 148.8 71.9 149.6 69.0 150.0C66.2 150.5 63.2 150.6 60.3 150.4C57.5 150.2 54.6 149.7 51.7 148.9C48.8 148.1 46.0 147.0 43.2 145.7C40.5 144.3 37.8 142.6 35.2 140.6C32.6 138.6 30.0 136.3 27.7 133.7C25.3 131.1 23.1 128.2 21.1 125.1C19.0 122.0 17.2 118.5 15.6 114.9C14.0 111.3 12.6 107.4 11.5 103.5C10.4 99.5 9.6 95.4 9.0 91.2C8.5 87.1 8.2 82.8 8.2 78.6C8.2 74.3 8.5 70.1 9.0 65.9C9.6 61.8 10.4 57.7 11.5 53.8C12.5 49.9 13.9 46.1 15.4 42.5C16.9 38.9 18.7 35.5 20.7 32.3C22.6 29.2 24.8 26.2 27.1 23.6C29.5 20.9 32.0 18.6 34.6 16.6C37.3 14.6 40.1 12.9 42.9 11.5C45.8 10.2 48.8 9.3 51.8 8.7C54.7 8.1 59.3 8.3 60.8 8.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-      <path class="fl" style="animation-duration:2.4s" d="M60 132C33 129 27 100 39 78 49 60 59 50 63 24 71 44 93 64 93 96 93 118 81 132 60 132Z" fill="url(#bigG)"/>
-    </svg><p class="fire__title">Потемки в огне</p></div>
-    <div class="fire__box">
-      <p class="h3">Письма из Потемок</p>
-      <p class="small fire__muted">Раз в месяц: новые коллекции, статьи и даты предзаказа.</p>
-      <form class="field" id="newsForm"><input class="input" id="newsEmail" type="email" required placeholder="Ваша почта" aria-label="Ваша почта"><button class="pill" type="submit">Подписаться</button></form>
-    </div>
+      <div class="emblem" aria-hidden="true"><svg class="oval" viewBox="-4 -4 128 168">
+        <defs><radialGradient id="haloG"><stop offset="0" stop-color="#ff8a2a" stop-opacity=".45"/><stop offset="1" stop-color="#ff5a1e" stop-opacity="0"/></radialGradient></defs>
+        <ellipse class="halo" cx="60" cy="96" rx="40" ry="46" fill="url(#haloG)"/>
+        <path d="M42.8 11.5C44.2 11.1 48.3 9.3 51.1 8.7C53.9 8.1 56.8 8.0 59.6 8.2C62.5 8.4 65.3 9.0 68.1 9.9C70.9 10.8 73.7 12.1 76.3 13.7C78.9 15.3 81.5 17.3 83.9 19.5C86.4 21.7 88.7 24.2 90.9 26.9C93.0 29.6 95.1 32.6 97.0 35.7C98.9 38.9 100.6 42.3 102.2 45.8C103.8 49.3 105.2 53.1 106.3 56.9C107.5 60.8 108.5 64.8 109.2 68.9C109.9 73.0 110.5 77.2 110.7 81.4C110.9 85.7 110.8 90.0 110.5 94.2C110.1 98.4 109.5 102.7 108.6 106.7C107.7 110.7 106.4 114.6 104.9 118.3C103.5 121.9 101.7 125.4 99.7 128.5C97.8 131.6 95.6 134.5 93.2 136.9C90.9 139.4 88.3 141.6 85.7 143.4C83.1 145.2 80.3 146.6 77.6 147.7C74.8 148.8 71.9 149.6 69.0 150.0C66.2 150.5 63.2 150.6 60.3 150.4C57.5 150.2 54.6 149.7 51.7 148.9C48.8 148.1 46.0 147.0 43.2 145.7C40.5 144.3 37.8 142.6 35.2 140.6C32.6 138.6 30.0 136.3 27.7 133.7C25.3 131.1 23.1 128.2 21.1 125.1C19.0 122.0 17.2 118.5 15.6 114.9C14.0 111.3 12.6 107.4 11.5 103.5C10.4 99.5 9.6 95.4 9.0 91.2C8.5 87.1 8.2 82.8 8.2 78.6C8.2 74.3 8.5 70.1 9.0 65.9C9.6 61.8 10.4 57.7 11.5 53.8C12.5 49.9 13.9 46.1 15.4 42.5C16.9 38.9 18.7 35.5 20.7 32.3C22.6 29.2 24.8 26.2 27.1 23.6C29.5 20.9 32.0 18.6 34.6 16.6C37.3 14.6 40.1 12.9 42.9 11.5C45.8 10.2 48.8 9.3 51.8 8.7C54.7 8.1 59.3 8.3 60.8 8.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <image class="fl" style="animation-duration:2.4s" href="" id="bigFlame" x="28" y="20" width="64" height="114"/>
+      </svg></div>
+      <p class="fire__title">Письма из Потемок</p>
+      <p class="fire__sub">Раз в месяц: новые коллекции, статьи и даты предзаказа.</p>
+      <form class="nl" id="newsForm"><input class="input" id="newsEmail" type="email" required placeholder="Ваша почта" aria-label="Ваша почта"><button class="nl__go" type="submit" aria-label="Подписаться">→</button></form>
     </div>
   </section>
   <nav class="tiles" aria-label="Быстрые ссылки">
-    <button class="tile" data-go="contacts">Контакты</button>
-    <button class="tile tile--blink" data-go="catalog" data-col="special">Специальная коллекция</button>
-    <button class="tile" data-go="delivery">Доставка и оплата</button>
-    <button class="tile" data-go="contacts">Оптовым клиентам</button>
-    <button class="tile" data-go="care">Уход за свечой</button>
     <button class="tile" data-go="about">О заводике</button>
+    <button class="tile tile--blink" data-go="special">Спецзаказы и оптовые закупки</button>
+    <button class="tile" data-go="delivery">Доставка и оплата</button>
+    <button class="tile" data-go="care">Уход за свечой</button>
   </nav>
-  <footer class="foot bleed wrap">
+  <footer class="foot foot--min bleed wrap">
     <div class="foot__logo">{{LOGO_HORIZ}}</div>
-    <div><h4>Магазин</h4><ul>
-      <li><button class="bare tl ul-fg" data-go="catalog" data-col="main">Основная коллекция</button></li>
-      <li><button class="bare tl ul-fg" data-go="catalog" data-col="special">Специальная коллекция</button></li>
-      <li><button class="bare tl ul-fg" data-go="catalog" data-col="collab">Коллаборации</button></li></ul></div>
-    <div><h4>Покупателям</h4><ul>
-      <li><button class="bare tl ul-fg" data-go="delivery">Доставка и оплата</button></li>
-      <li><button class="bare tl ul-fg" data-go="journal">Журнал</button></li>
-      <li><button class="bare tl ul-fg" data-go="about">О заводике</button></li></ul></div>
-    <div><h4>Связаться</h4><ul>
-      <li style="user-select:all">researchzarina@gmail.com</li>
-      <li><button class="bare tl ul" data-copy>Скопировать почту</button></li>
-      <li class="muted">Публичная оферта</li>
-      <li class="muted">Политика обработки данных</li></ul></div>
+    <ul>
+      <li><button class="bare tl ul-fg" data-go="offer">Публичная оферта</button></li>
+      <li><button class="bare tl ul-fg" data-go="privacy">Политика обработки данных</button></li>
+      <li><button class="bare tl ul-fg" data-go="feedback">Обратная связь</button></li>
+    </ul>
   </footer>
-  <div class="copy"><span>© 2026 Потемки — маленький свечной заводик</span><span>Макет сайта · товары с пометкой «демо» — примеры</span></div>
+  <div class="copy"><span>© 2025 МсЗ “Потемки”</span><span>Товары с пометкой «демо» — примеры</span></div>
 </div>
 
 <div class="menu" id="menu" hidden>
@@ -464,7 +502,7 @@ details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
         <li><button class="bare tl" data-go="catalog" data-type="aroma">Аромасвечи</button></li>
         <li><button class="bare tl" data-go="catalog" data-type="decor">Подсвечники</button></li></ul></div>
       <div><h4>Читать</h4><ul>
-        <li><button class="bare tl" data-go="journal">Журнал</button></li>
+        <li><button class="bare tl" data-go="journal">В огне</button></li>
         <li><button class="bare tl" data-go="article" data-id="forma">Форма свечи</button></li>
         <li><button class="bare tl" data-go="care">Уход за свечой</button></li></ul></div>
       <div><h4>О нас</h4><ul>
@@ -486,6 +524,7 @@ details>div{padding-bottom:18px;color:var(--muted);font-size:16px}
 <script>
 const IMG={{IMG_JSON}};
 const STAMP=`{{LOGO_STAMP}}`;
+const TEX={{TEX_JSON}};
 const STACK=`{{LOGO_STACK}}`;
 const WORD=`{{LOGO_WORD}}`;
 
@@ -581,7 +620,7 @@ V.home=()=>{
   return `
 <header class="head"><button class="logo" id="logo" data-go="home" aria-label="Потемки — на главную"><span class="lw">${WORD}</span><span class="ls">${STACK}</span></button></header>
 
-<section class="hero" aria-roledescription="слайдер" aria-label="Статьи журнала">
+<section class="hero" aria-roledescription="слайдер" aria-label="Статьи">
   <div class="counter"><span id="slideNo">1/${ARTICLES.length}</span><button class="bare tl" id="next" aria-label="Следующий слайд">→</button></div>
   <div class="slides">
   ${ARTICLES.map((a,i)=>`<div class="slide${i===0?" on":""}" data-i="${i}" ${i?'aria-hidden="true"':''}>
@@ -618,29 +657,29 @@ V.home=()=>{
   </div>
 </section>
 
-<section style="padding-block:28px 72px">
-  ${label("О заводике")}
-  <div class="feature" style="padding-top:24px">
-    <div class="stamp" aria-hidden="true">${STAMP}</div>
-    <div class="feature__text">
-      <h2 class="feature__title">Маленький свечной заводик</h2>
-      <p>Отливаем свечи вручную небольшими партиями из оливкового и соевого воска. <button class="bare tl ul-fg" data-go="about">Читать дальше.</button></p>
-    </div>
-  </div>
-</section>
+${museum(false)}
 
-<section class="inv bleed wrap" aria-label="Журнал">
-  ${label("Журнал")}
-  <div class="feature">
-    <img class="feature__img" src="${IMG["taper-single"]}" alt="">
-    <div class="feature__text">
-      <h2 class="feature__title"><button class="bare tl" data-go="article" data-id="forma">Форма свечи</button></h2>
-      <p>${ARTICLES[0].lead} <button class="bare tl ul-fg" data-go="article" data-id="forma">Читать дальше.</button></p>
-    </div>
-  </div>
-  <div class="feature__more"><button class="pill" data-go="journal">Все статьи журнала</button></div>
+<section class="vogne bleed wrap" aria-label="В огне">
+  ${label("В огне",'data-go="journal"')}
+  <div class="strip3">${ARTICLES.map(acard).join("")}</div>
 </section>`;
 };
+const GAL=[["taper-single","Столовая свеча 20 см"],["flame-pair","Зажженные столовые свечи"],["taper-pair","Столовые свечи 20 и 25 см"],["pillar","Свеча-столбик 5×12 см"],["aroma","Аромасвеча «Лавр и пламя»"]];
+function museum(full){
+  return `<section class="mus" aria-label="О заводике">
+  <div class="mus__lab">О заводике</div>
+  <p class="mus__lead">Маленький свечной заводик: простые свечи точной формы из теплых натуральных материалов.</p>
+  <div class="bleed line-t"></div>
+  <div class="mus__body">
+    <p>Потемки начались как небольшое исследование истории быта. Нам хотелось вернуть простую столовую свечу, какой она была до свечного бума: ясную по форме и честную по составу.</p>
+    <p>Мы соединяем точную промышленную форму с доиндустриальными материалами: оливковым, пчелиным и соевым воском, хлопковым фитилем, поталью. Свечи не коптят, не пахнут и не спорят со вкусом вина и еды.</p>
+    ${full?`<p>Каждую свечу мы отливаем вручную небольшими партиями, поэтому каждая немного отличается. Иногда свеча «всплакнет»: это след ручной заливки воска в формы.</p>`:""}
+  </div>
+  <div class="gal bleed">${GAL.map(([k,c],i)=>`<figure><img src="${IMG[k]}" alt="${c}" loading="lazy"><figcaption><span>${i+1}/${GAL.length}</span><span>${c}</span></figcaption></figure>`).join("")}</div>
+  <div class="mus__more">${full?`<button class="pill" data-go="article" data-id="forma">Читать эссе «Форма свечи»</button>`:`<button class="bare tl ul-fg" data-go="about">Подробнее о заводике</button>`}</div>
+</section>`;
+}
+const acard=a=>`<button class="bare acard" data-go="article" data-id="${a.id}"><img class="acard__img" src="${IMG[a.img]}" alt=""><span class="acard__title">${a.title}</span><span class="acard__meta">${a.kind} · ${a.read}</span></button>`;
 
 /* ───────── каталог ───────── */
 let F={col:"all",type:"all",sort:"def"};
@@ -703,13 +742,13 @@ V.product=()=>{
 
 /* ───────── журнал и страницы ───────── */
 const headLogo=()=>`<header class="head"><button class="logo" data-go="home" aria-label="Потемки — на главную"><span class="lw">${WORD}</span><span class="ls">${STACK}</span></button></header>`;
-V.journal=()=>`${headLogo()}<div class="page"><div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>Журнал</span></div>
-  <h1 class="display">Журнал</h1><p class="prose-sm muted" style="margin-block:14px 28px">Эссе о свечах и быте, гиды по уходу, новости заводика.</p></div>
+V.journal=()=>`${headLogo()}<div class="page"><div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>В огне</span></div>
+  <h1 class="display">В огне</h1><p class="prose-sm muted" style="margin-block:14px 28px">Эссе о свечах и быте, гиды по уходу, новости заводика.</p></div>
   <div class="rows bleed wrap line-t">${ARTICLES.map(a=>`<button class="bare row" data-go="article" data-id="${a.id}">
     <img class="row__img" src="${IMG[a.img]}" alt=""><span class="row__title"><span class="tl">${a.title}</span></span><span class="muted">${a.kind} · ${a.read}</span></button>`).join("")}</div><div style="height:72px"></div>`;
 
 V.article=()=>{const a=ARTICLES.find(x=>x.id===cur.id)||ARTICLES[0];
-  return `${headLogo()}<div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<button class="bare tl" data-go="journal">Журнал</button>/<span>${a.title}</span></div>
+  return `${headLogo()}<div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<button class="bare tl" data-go="journal">В огне</button>/<span>${a.title}</span></div>
   <article class="article">
     <img class="article__img" src="${IMG[a.img]}" alt="">
     <h1 class="display serif">${a.title}</h1>
@@ -720,12 +759,30 @@ V.article=()=>{const a=ARTICLES.find(x=>x.id===cur.id)||ARTICLES[0];
   <section style="padding-block:40px 72px">${label("Свечи основной коллекции",'data-go="catalog" data-col="main"')}<div class="cells cells--p bleed">${P.filter(p=>p.col==="main"&&!p.demo).slice(0,3).map(pcell).join("")}</div></section>`};
 V.care=()=>{cur.id="care";return V.article()};
 
-V.about=()=>`${headLogo()}<div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<span>О заводике</span></div>
-  <div class="feature"><div class="stamp" aria-hidden="true">${STAMP}</div>
-  <div class="feature__text" style="max-width:40ch"><h1 class="feature__title">Маленький свечной заводик</h1>
-  <p>Потемки начались как небольшое исследование истории быта. Простая столовая свеча, какой она была до свечного бума, но из теплых натуральных материалов: оливкового и соевого воска, хлопкового фитиля.</p>
-  <p>Мы отливаем свечи вручную небольшими партиями, поэтому каждая немного отличается.</p>
-  <button class="pill" data-go="article" data-id="forma">Читать эссе «Форма свечи»</button></div></div>`;
+V.about=()=>`${headLogo()}<div class="crumbs page"><button class="bare tl" data-go="home">Главная</button>/<span>О заводике</span></div>${museum(true)}`;
+
+const docPage=(title,body)=>`${headLogo()}<div class="page"><div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>${title}</span></div>
+  <div class="doc"><h1 class="display">${title}</h1>${body}</div></div>`;
+V.offer=()=>docPage("Публичная оферта",`<p class="muted">Документ готовится и появится здесь до запуска приема оплаты. По вопросам пишите на <span style="user-select:all">researchzarina@gmail.com</span>.</p>`);
+V.privacy=()=>docPage("Политика обработки данных",`<p class="muted">Документ готовится. Мы используем имя, телефон, почту и адрес только для оформления и доставки заказа. По вопросам пишите на <span style="user-select:all">researchzarina@gmail.com</span>.</p>`);
+V.special=()=>docPage("Спецзаказы и оптовые закупки",`<p>Отливаем свечи под ваш повод и для бизнеса: свадьбы и ужины, рестораны и кафе, подарки для команды, свечи в цветах бренда.</p>
+  <div class="cells cells--3 bleed" style="margin-block:10px 6px">
+    <div class="cell" style="padding-bottom:36px"><span class="cell__title">Спецзаказ</span><span class="cell__meta">Особый цвет, высота, количество или упаковка для события</span></div>
+    <div class="cell" style="padding-bottom:36px"><span class="cell__title">Опт</span><span class="cell__meta">Регулярные поставки свечей для ресторанов, магазинов и студий</span></div>
+    <div class="cell" style="padding-bottom:36px"><span class="cell__title">Коллаборации</span><span class="cell__meta">Совместная свеча с художником или брендом</span></div>
+  </div>
+  <p>Напишите, что нужно, к какому сроку и в каком количестве, и мы ответим с расчетом.</p>
+  <p class="h3" style="user-select:all;word-break:break-all">researchzarina@gmail.com</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="pill pill--hot" data-copy>Скопировать почту</button><button class="pill" data-go="feedback">Написать через форму</button></div>`);
+V.feedback=()=>docPage("Обратная связь",`<p>Вопрос о заказе, отзыв о свече или идея для коллаборации: напишите нам.</p>
+  <form class="fb" id="fbForm" novalidate>
+    <input class="input" id="fb-name" name="name" placeholder="Ваше имя" aria-label="Ваше имя" autocomplete="name">
+    <input class="input" id="fb-mail" name="email" type="email" placeholder="Почта для ответа" aria-label="Почта для ответа" autocomplete="email" required>
+    <textarea id="fb-text" name="text" placeholder="Сообщение" aria-label="Сообщение" required></textarea>
+    <p class="err" id="fbErr" hidden></p>
+    <button class="pill pill--hot" type="submit" style="justify-self:start;height:46px;padding:0 26px 2px">Отправить</button>
+  </form>
+  <p class="muted small">Кнопка откроет вашу почтовую программу с готовым письмом. Можно написать и напрямую: <span style="user-select:all">researchzarina@gmail.com</span></p>`);
 
 V.delivery=()=>`${headLogo()}<div class="page"><div class="crumbs"><button class="bare tl" data-go="home">Главная</button>/<span>Доставка и оплата</span></div><h1 class="display" style="margin-bottom:28px">Доставка и оплата</h1></div>
   <div class="cells cells--3 bleed" style="margin-bottom:24px">
@@ -872,6 +929,11 @@ document.addEventListener("change",e=>{if(e.target.id==="sort"){F.sort=e.target.
 document.addEventListener("submit",e=>{
   e.preventDefault();
   if(e.target.id==="newsForm"){const i=$("#newsEmail");if(!i.checkValidity()||!i.value){toast("Проверьте адрес почты");return}i.value="";toast("Готово, вы подписаны");return}
+  if(e.target.id==="fbForm"){const f=e.target,err=$("#fbErr");
+    if(!f.email.value.trim()||!f.email.checkValidity()||!f.text.value.trim()){err.textContent="Укажите почту для ответа и напишите сообщение";err.hidden=false;return}
+    const subj=encodeURIComponent("Сообщение с сайта Потемки"+(f.name.value.trim()?" от "+f.name.value.trim():""));
+    const body=encodeURIComponent(f.text.value.trim()+"\n\nПочта для ответа: "+f.email.value.trim());
+    location.href="mailto:researchzarina@gmail.com?subject="+subj+"&body="+body;toast("Открываем почту…");return}
   if(e.target.id==="orderForm"){const f=e.target,err=$("#formErr");
     const bad=[...f.querySelectorAll("[required]")].filter(i=>!i.value.trim()||!i.checkValidity());
     if(bad.length){err.textContent="Заполните поля: "+bad.map(i=>i.closest("label").childNodes[0].textContent.trim()).join(", ");err.hidden=false;bad[0].focus();return}
@@ -887,32 +949,32 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){openCart(false);$("
 const MQ=["Бесплатная доставка от 3 000 ₽","Специальная коллекция «Зима 26-27» скоро","Каждая свеча отлита вручную","Оливковый воск, хлопковый фитиль, поталь","Пишите о коллаборациях: researchzarina@gmail.com"];
 $("#mq").innerHTML=[...MQ,...MQ].map(t=>`<span>${t}</span>`).join("");
 
-/* ───────── огоньки ───────── */
+/* ───────── огоньки: штриховка карандашом ───────── */
+document.documentElement.style.setProperty("--grey",`url(${TEX.grey_tile})`);
+$("#bigFlame").setAttribute("href",TEX.big);
 (function fire(){
   const cv=$("#fireCanvas"), ctx=cv.getContext("2d"); let W=0,H=0,dpr=1,flames=[];
   const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const spr=[0,1,2,3,4,5].map(i=>{const im=new Image();im.src=TEX["fl"+i];return im});
   function size(){dpr=Math.min(2,window.devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;
     flames=[];const gx=Math.max(54,W/22),gy=70;let r=0;
-    for(let y=gy*.7;y<H+gy;y+=gy,r++)for(let x=(r%2?gx/2:0)-gx;x<W+gx;x+=gx)
-      flames.push({x,y,s:.65+Math.random()*.6,ph:Math.random()*6.28,sp:.8+Math.random()*1.4})}
-  function flame(f,t){
-    const k=f.s*(1+.10*Math.sin(t*f.sp*3.1+f.ph)+.05*Math.sin(t*f.sp*7.3+f.ph*2));
-    const sway=Math.sin(t*f.sp*1.7+f.ph)*4*f.s, h=34*k, w=11*f.s;
-    const x=((f.x+t*14)%(W+120))-60, y=f.y;
+    for(let y=gy*.75;y<H+gy;y+=gy,r++)for(let x=(r%2?gx/2:0)-gx;x<W+gx;x+=gx)
+      flames.push({x,y,s:.7+Math.random()*.55,ph:Math.random()*6.28,sp:.8+Math.random()*1.4,i:Math.floor(Math.random()*6)})}
+  function flame(f,t,x){
+    const k=f.s*(1+.09*Math.sin(t*f.sp*3.1+f.ph)+.05*Math.sin(t*f.sp*7.3+f.ph*2));
+    const sway=Math.sin(t*f.sp*1.7+f.ph)*.07, h=40*k, w=26*f.s, y=f.y;
     ctx.globalCompositeOperation="lighter";
-    const g=ctx.createRadialGradient(x,y-h*.35,0,x,y-h*.35,h*1.5);
-    g.addColorStop(0,"rgba(255,120,40,.30)");g.addColorStop(1,"rgba(255,70,20,0)");
-    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y-h*.35,h*1.5,0,6.29);ctx.fill();
+    const g=ctx.createRadialGradient(x,y-h*.4,0,x,y-h*.4,h*1.2);
+    g.addColorStop(0,"rgba(255,120,40,.16)");g.addColorStop(1,"rgba(255,70,20,0)");
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y-h*.4,h*1.2,0,6.29);ctx.fill();
     ctx.globalCompositeOperation="source-over";
-    const fl=ctx.createLinearGradient(x,y,x,y-h);
-    fl.addColorStop(0,"#e32118");fl.addColorStop(.55,"#ff7a1c");fl.addColorStop(1,"#ffb347");
-    ctx.fillStyle=fl;ctx.beginPath();ctx.moveTo(x,y);
-    ctx.bezierCurveTo(x-w*1.25,y-h*.25,x-w*.55+sway*.4,y-h*.7,x+sway,y-h);
-    ctx.bezierCurveTo(x+w*.55+sway*.4,y-h*.7,x+w*1.25,y-h*.25,x,y);ctx.fill();
-    ctx.fillStyle="rgba(255,236,200,.9)";ctx.beginPath();ctx.ellipse(x+sway*.25,y-h*.22,w*.32,h*.2,0,0,6.29);ctx.fill();
+    const im=spr[f.i]; if(!im.complete)return;
+    ctx.save();ctx.translate(x,y);ctx.rotate(sway);ctx.drawImage(im,-w/2,-h,w,h);ctx.restore();
   }
-  let hole=null;function measure(){const e=document.querySelector('.emblem'),s=cv.getBoundingClientRect();if(!e)return;const r=e.getBoundingClientRect();hole={x:r.left-s.left+r.width/2,y:r.top-s.top+r.height/2,rx:r.width/2+30,ry:r.height/2+34}}
-  function draw(ms){const t=reduce?0:ms/1000;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);flames.forEach(f=>{if(hole){const x=((f.x+t*14)%(W+120))-60,dx=(x-hole.x)/hole.rx,dy=(f.y-14-hole.y)/hole.ry;if(dx*dx+dy*dy<1)return}flame(f,t)});if(!reduce)requestAnimationFrame(draw)}
+  let hole=null;function measure(){const e=document.querySelector('.fire__in'),s=cv.getBoundingClientRect();if(!e)return;const r=e.getBoundingClientRect();hole={x:r.left-s.left+r.width/2,y:r.top-s.top+r.height/2,rx:Math.min(r.width,520)/2+40,ry:r.height/2+30}}
+  function draw(ms){const t=reduce?0:ms/1000;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+    flames.forEach(f=>{const x=((f.x+t*14)%(W+120))-60;if(hole){const dx=(x-hole.x)/hole.rx,dy=(f.y-18-hole.y)/hole.ry;if(dx*dx+dy*dy<1)return}flame(f,t,x)});
+    if(!reduce)requestAnimationFrame(draw)}
   size();measure();addEventListener("resize",()=>{size();measure()});requestAnimationFrame(draw);
 })();
 

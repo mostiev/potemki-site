@@ -9,6 +9,12 @@ def svg(n):
     return open(os.path.join(SRC, "logos", n), encoding="utf-8").read().replace('<svg ', '<svg aria-hidden="true" focusable="false" ')
 imgs = {n: "data:image/jpeg;base64," + base64.b64encode(open(os.path.join(SRC, "img", n + ".jpg"), "rb").read()).decode()
         for n in ["taper-single", "flame-pair", "taper-pair", "pillar", "aroma"]}
+tex = {}
+for f in sorted(os.listdir(os.path.join(SRC, "tex"))):
+    k, ext = os.path.splitext(f)
+    mime = "image/png" if ext == ".png" else "image/jpeg"
+    tex[k] = "data:%s;base64,%s" % (mime, base64.b64encode(open(os.path.join(SRC, "tex", f), "rb").read()).decode())
+t = t.replace("{{TEX_JSON}}", json.dumps(tex))
 t = (t.replace("{{IMG_JSON}}", json.dumps(imgs)).replace("{{LOGO_WORD}}", svg("wordmark.svg"))
       .replace("{{LOGO_HORIZ}}", svg("horiz.svg")).replace("{{LOGO_STAMP}}", svg("stamp.svg"))
       .replace("{{LOGO_STACK}}", svg("stack2.svg")))
